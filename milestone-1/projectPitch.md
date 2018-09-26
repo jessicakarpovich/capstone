@@ -10,6 +10,8 @@ Sashimi Ninja will be a web/mobile app for studying Japanese with a focus on Hir
 - no pre-qualifications for accessing highest level difficulty
 - user ranking by score
 
+*Note:* Each user will have a score that will increase each time they successfully complete a level in test mode. The amount by which it increases will be determined by the test difficulty as well as the number of correct answers. Each user score will be publicly available to other users in a format similar to: **1. User**: 450, with the top scores being on top. 
+
 ### Similar Services and Competition
 - Erin's Challenge
 - Duolingo
