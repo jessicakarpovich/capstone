@@ -25,7 +25,15 @@ Sashimi Ninja will be a web/mobile app for studying Japanese with a focus on Hir
 - **AWS Server or Github Pages** - for deploying React version of the app
 
 ### Target Audience
-I will be accomodating a larger audience, so I will focus on making the app accessible to all by making it free and without ads.
-- **Age** - 10-30
+- **Age** - 15-30
 - **Income** - $0-5,000
-- **Related Interests** - Anime, manga, light novels, video games, travel
+- **Related Interests** - Manga, light novels, video games
+- **Focus** - Learn the language, especially reading, for personal use and hobbies.
+- **Behaviors** - Study in random bursts.
+- **Proficency** - Mid-level Beginner to Intermediate in Japanese
+
+**User stories**
+
+1. My favorite manga isn't getting an offical translation and the team scanlating it, has dropped it. I would love to finish the story, but first need to improve my Japanese reading skills. I've bought the raws and it has Furigana over the difficult Kanji, so I'll be ready to go once I can fluently read Hiragana, Katakana and the basic Kanji. Most apps I've found, focus on either Kana or Kanji. I would like a single app that lets me pick-and-choose what I want to review.
+
+2. I've studied Japanese a couple of years ago and now I want to review before starting to play a Japanese game. Most apps force me to start at the beginning before giving me access to higher difficulties. I know the basics so this is frustrating. Isn't there a way for me to review just what I need?
