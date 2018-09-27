@@ -1,16 +1,17 @@
 *Jessica Karpovich* - *WAI C201810*
 
 ## Sashimi Ninja
-Sashimi Ninja will be a web/mobile app for studying Japanese with a focus on Hiragana, Katakana, beginning level Kanji and commonly used words. It will allow the user to review material, test their knowledge in games, and compete for a high score against other users.
+Sashimi Ninja will be a web/mobile app for studying Japanese with a focus on Hiragana, Katakana, beginning level Kanji and phrases. It will allow the user to review material, test their knowledge in games, and view their most recent scores.
 
 ### Features
 - shared user progress between mobile and web version
+- reference view (if time allows, will include kana charts and search feature which will link to Google translate API)
 - review mode
 - test mode
 - no pre-qualifications for accessing highest level difficulty
-- user ranking by score
+- 10 most recent test scores
 
-*Note:* Each user will have a score that will increase each time they successfully complete a level in test mode. The amount by which it increases will be determined by the test difficulty as well as the number of correct answers. Each user score will be publicly available to other users in a format similar to: **1. User**: 450, with the top scores being on top. 
+*Note:* User will be able to see their 10 most recent test scores and details about what the tests covered. For example, if they took a test with Hiragana and Katakana あーン, they will see how many they got right from the Hiragana questions and how many they got right from the Katakana questions.
 
 ### Similar Services and Competition
 - Erin's Challenge
