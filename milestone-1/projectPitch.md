@@ -3,6 +3,8 @@
 ## Sashimi Ninja
 Sashimi Ninja will be a web/mobile app for studying Japanese with a focus on Hiragana, Katakana, beginning level Kanji and phrases. It will allow the user to review material, test their knowledge in games, and view their most recent scores.
 
+*Note:* If you are new to Japanese, this probably sounds confusing. For more information on the Japanese language itself, check out [this](https://www.iwillteachyoualanguage.com/learn/japanese) and [this](https://www.fluentin3months.com/easy-japanese/) great article.
+
 ### Features
 - shared user progress between mobile and web version
 - reference view (if time allows, will include kana charts and search feature which will link to Google translate API)
