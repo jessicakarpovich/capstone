@@ -48,7 +48,7 @@ Sashimi Ninja will be superior to all its competition because of the following k
 * free (no ads)
 * clean, tested design
 * no login/signup required
-* if logged in, shared progress between mobile and web app
+* if logged in, saved progress
 * review section - kana, kanji
 * test section - user selects question content and language
 * resources section - kana charts, translator, getting started guides
