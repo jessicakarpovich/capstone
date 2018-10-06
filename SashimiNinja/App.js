@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import * as firebase from 'firebase';
 import 'firebase/firestore';
 import { Button } from 'react-native';
-import {Key, Domain, ID, iosID} from 'react-native-dotenv';
+import {Key, Domain, databaseURL, ID, iosID} from 'react-native-dotenv';
 //import { GoogleSignin, GoogleSigninButton } from 'react-native-google-signin';
 
 import Expo from 'expo';
@@ -21,6 +21,8 @@ export default class App extends React.Component {
     // bind function with retrieval logic
     this.getHiragana = this.getHiragana.bind(this);
     this.signInWithGoogleAsync = this.signInWithGoogleAsync.bind(this);
+    this.signOut = this.signOut.bind(this);
+    this.addFive = this.addFive.bind(this);
   }
 
   componentDidMount() {
@@ -28,12 +30,14 @@ export default class App extends React.Component {
     const fbConfig = {
       apiKey: Key,
       authDomain: Domain,
+      databaseURL: databaseURL,
       projectId: ID
     };
 
     // Initialize Cloud Firestore through Firebase
     firebase.initializeApp(fbConfig);
     const db = firebase.firestore();
+    this.setState({db: db});
 
     // Disable deprecated features
     db.settings({
@@ -45,8 +49,9 @@ export default class App extends React.Component {
 
     // watch for user auth changes, either null or obj
     this.authSubscription = firebase.auth().onAuthStateChanged((user) => {
-      if (user != null) {
-        console.log("Success");
+      if (user != null) { 
+        console.log("Success logging in");
+        this.setState({user: user});
       }
     });
   }
@@ -67,7 +72,6 @@ export default class App extends React.Component {
       // check for data, if exists, save it to state
       if (doc.exists) {
           hArray = doc.data().array;
-          console.log(hArray);
           this.setState({hiragana: hArray});
       } else {
           // doc.data() will be undefined in this case
@@ -106,14 +110,34 @@ export default class App extends React.Component {
     }
   }
 
-  // test later
+  // function to test adding to score by user id
+  addFive() {
+    // check th user is logged in
+    if (this.state.user) {
+      // get user doc using the db
+      // access users and get this user by user id
+      // then set the score to 5
+      let userDoc = this.state.db.collection("users").doc(this.state.user.uid).set({
+        array: [5]
+      }).catch((error) => {
+        // show errors here.
+        console.log(error);
+      });
+      console.log(5);
+    }
+  }
+
+  // log out user
   signOut() {
-    firebase.auth().signOut().then(function() {
+    // use arrow function to have correct "this"
+    firebase.auth().signOut().then(() => {
       // Sign-out successful.
+      // set state user to null to not overwrite user data
+      this.setState({user: null});
       console.log("Logged OUT");
     }).catch(function(error) {
       // An error happened.
-      console.log("Error in signing out");
+      console.log("Error in signing out", error);
     });
   }
 
@@ -127,6 +151,7 @@ export default class App extends React.Component {
         <Text>{ JSON.stringify(this.state.hiragana) }</Text>
         <Button onPress={ this.signInWithGoogleAsync } title="Login"></Button>
         <Button onPress={this.signOut} title="Sign Out"></Button>
+        <Button onPress={this.addFive} title="Add Five"></Button>
       </View>
     );
   }
@@ -140,12 +165,3 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
-
-/////// leaving for reference later on how to get test scores
-function storeHighScore(user, score) {
-  if (user != null) {
-    firebase.database().ref('users/' + user.uid).set({
-      highscore: score
-    });
-  }
-}
