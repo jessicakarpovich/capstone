@@ -13,4 +13,5 @@ export default {
   noticeText: '#fff',
   backgroundMain: '#cbffdb',
   navBkgd: '#2dd3ac',
+  altColor: '#671493',
 };

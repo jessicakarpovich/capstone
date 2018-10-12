@@ -1,9 +1,21 @@
 import React from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
+import Colors from '../constants/Colors';
+import LogoIcon from '../constants/LogoIcon';
+import HelpIcon from '../constants/HelpIcon';
 
 export default class ReviewScreen extends React.Component {
   static navigationOptions = {
     title: 'Review',
+    headerLeft: (
+      <LogoIcon />
+    ),
+    headerRight: (
+      <HelpIcon />
+    ),
+    headerStyle: {
+      backgroundColor: Colors.navBkgd,
+    },
   };
 
   render() {

@@ -18,7 +18,7 @@ export default class HomeScreen extends React.Component {
   // for now hardcode it to display home, 
   // later test displaying logged in username if reasonable
   static navigationOptions = {
-    headerTitle: <Text>Home</Text>,
+    title: 'Home',
     headerLeft: (
       <LogoIcon />
     ),

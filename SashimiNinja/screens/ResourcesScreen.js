@@ -1,16 +1,22 @@
 import React from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
+import Colors from '../constants/Colors';
+import LogoIcon from '../constants/LogoIcon';
 
 export default class ResourcesScreen extends React.Component {
   static navigationOptions = {
     title: 'Resources',
+    headerLeft: (
+      <LogoIcon />
+    ),
+    headerStyle: {
+      backgroundColor: Colors.navBkgd,
+    },
   };
 
   render() {
     return (
       <ScrollView style={styles.container}>
-        {/* Go ahead and delete ExpoLinksView and replace it with your
-           * content, we just wanted to provide you with some helpful links */}
       </ScrollView>
     );
   }

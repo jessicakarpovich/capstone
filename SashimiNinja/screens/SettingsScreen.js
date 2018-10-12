@@ -1,17 +1,24 @@
 import React from 'react';
-import {
-  Text,
-  View,
-} from 'react-native';
+import { Text, View, } from 'react-native';
+import Colors from '../constants/Colors';
+import LogoIcon from '../constants/LogoIcon';
+import HelpIcon from '../constants/HelpIcon';
 
 export default class SettingsScreen extends React.Component {
   static navigationOptions = {
-    title: 'app.json',
+    title: 'Settings',
+    headerLeft: (
+      <LogoIcon />
+    ),
+    headerRight: (
+      <HelpIcon />
+    ),
+    headerStyle: {
+      backgroundColor: Colors.navBkgd,
+    },
   };
 
   render() {
-    /* Go ahead and delete ExpoConfigView and replace it with your
-     * content, we just wanted to give you a quick view of your config */
     return (
       <View>
         <Text>Hellp Settings</Text>
