@@ -1,12 +1,15 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, ScrollView, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { createStackNavigator } from 'react-navigation';
 import Colors from '../constants/Colors';
+import KanaLabels from '../constants/KanaLabels';
 import LogoIcon from '../constants/LogoIcon';
 import HelpIcon from '../constants/HelpIcon';
 
 // initail review screen with options for
 // Hiragana, Katakana and Kanji
+// each option presents rows of where to start
+// upon selecting a row, you get details of one character at a time
 export default class ReviewScreen extends React.Component {
   static navigationOptions = {
     title: 'Review',
@@ -53,6 +56,7 @@ export class ReviewRowScreen extends React.Component {
     super(props);
       this.state = {
         type: this.props.navigation.state.params.type,
+        rowLabeles: [],
       };
   }
 
@@ -68,16 +72,30 @@ export class ReviewRowScreen extends React.Component {
     },
   });
 
+  componentDidMount() {
+    // if user asked for Hiragana,
+    if (this.state.type == 'Hiragana') {
+      // set the labels with Hiragana labels
+      this.setState({rowLabeles: KanaLabels.hiraganaRowTitles});
+    }
+  }
+
+  // rowBtns allow the user to jump to a specific row
   render() {
+    let rowBtns = this.state.rowLabeles.map((label, i) => {
+      return (
+        <TouchableOpacity 
+          style={styles.largeBtn}
+          key={label}
+          onPress={() => this.props.navigation.navigate('Detail', {type: 'Hiragana', i: i})}>
+            <Text>{ label }</Text>
+        </TouchableOpacity>);
+      });
+
     return (
       <View style={styles.container}>
         <Text style={styles.centerText}>Start from:</Text>
-
-        <TouchableOpacity 
-          style={styles.largeBtn} 
-          onPress={() => this.props.navigation.navigate('Detail', {type: 'Hiragana', index: 4})}>
-            <Text style={styles.largeBtnText}>Hiragana</Text>
-        </TouchableOpacity>
+        <ScrollView>{rowBtns}</ScrollView>
       </View>
     );
   }
@@ -88,10 +106,20 @@ export class ReviewDetailScreen extends React.Component {
 
   constructor(props) {
     super(props);
+    // use type to know Hiragana/Katakana/Kanji
+    // use index to know row
+    // use indecies with index to get first character in row
+    // use characterIndex to keep track of current character
       this.state = {
         type: this.props.navigation.state.params.type,
-        index: this.props.navigation.state.params.index,
+        index: this.props.navigation.state.params.i,
+        indecies: KanaLabels.kanaIndecies,
+        characterIndex: 0,
       };
+  }
+
+  componentDidMount() {
+    this.setState({ characterIndex: this.state.indecies[this.state.index]});
   }
 
   // TO-DO: figure out how to change title when user starts next row
@@ -111,7 +139,7 @@ export class ReviewDetailScreen extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.centerText}>{this.state.type} - {this.state.index}</Text>
+        <Text style={styles.centerText}>{this.state.type} - {this.state.characterIndex}</Text>
       </View>
     );
   }
