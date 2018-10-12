@@ -3,11 +3,15 @@ import { Platform } from 'react-native';
 import { createStackNavigator, createBottomTabNavigator } from 'react-navigation';
 
 import TabBarIcon from '../components/TabBarIcon';
+// import main screens
 import HomeScreen from '../screens/HomeScreen';
 import ReviewScreen from '../screens/ReviewScreen';
 import TestScreen from '../screens/TestScreen';
 import ResourcesScreen from '../screens/ResourcesScreen';
 import SettingsScreen from '../screens/SettingsScreen';
+
+//import detail screens
+import { ReviewRowScreen } from '../screens/ReviewScreen';
 
 import Colors from '../constants/Colors';
 
@@ -28,8 +32,14 @@ HomeStack.navigationOptions = {
   ),
 };
 
+// specify main and detail screens here to have nested
+// stack nav inside tab nav
 const ReviewStack = createStackNavigator({
   Review: ReviewScreen,
+  Row: ReviewRowScreen,
+},
+{
+  initialRouteName: 'Review',
 });
 
 ReviewStack.navigationOptions = {
