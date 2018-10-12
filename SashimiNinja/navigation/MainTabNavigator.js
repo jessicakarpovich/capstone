@@ -11,7 +11,7 @@ import ResourcesScreen from '../screens/ResourcesScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 
 //import detail screens
-import { ReviewRowScreen } from '../screens/ReviewScreen';
+import { ReviewRowScreen, ReviewDetailScreen } from '../screens/ReviewScreen';
 
 import Colors from '../constants/Colors';
 
@@ -37,6 +37,7 @@ HomeStack.navigationOptions = {
 const ReviewStack = createStackNavigator({
   Review: ReviewScreen,
   Row: ReviewRowScreen,
+  Detail: ReviewDetailScreen,
 },
 {
   initialRouteName: 'Review',
