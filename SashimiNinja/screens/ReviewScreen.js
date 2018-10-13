@@ -161,8 +161,15 @@ export class ReviewDetailScreen extends React.Component {
   // have if check for kana/kanji
   render() {
     let data = {};
+    let backDisabled = false;
+    let nextDisabled = false;
     if (this.state.characterArray.length > 0) {
       data = this.state.characterArray[this.state.characterIndex];
+    }
+    if (this.state.characterIndex == 0) {
+      backDisabled = true;
+    } else if (this.state.characterIndex == this.state.characterArray.length-1) {
+      nextDisabled = true;
     }
 
     if (this.state.type !== 'Kanji') {
@@ -178,16 +185,18 @@ export class ReviewDetailScreen extends React.Component {
           <View style={styles.rowAround}>
             <Icon.Ionicons
               name='ios-arrow-back'
-              size={30}
+              size={60}
               style={styles.icon}
-              onPress={() => console.log('Hellllo')}
+              disabled={backDisabled}
+              onPress={this.viewPrevious}
             />
             <Text style={styles.character}>{ data.character }</Text>
             <Icon.Ionicons
               name='ios-arrow-forward'
-              size={30}
+              size={60}
               style={styles.icon}
-              onPress={() => console.log('Hellllo')}
+              disabled={nextDisabled}
+              onPress={this.viewNext}
             />
           </View>
           <View style={styles.rowCenter}>
@@ -203,6 +212,20 @@ export class ReviewDetailScreen extends React.Component {
           <Text>{ data.romaji }</Text>
         </View>
       );
+    }
+  }
+
+  viewPrevious = () => {
+    // check that there is a previous character
+    if (this.state.characterIndex > 0) {
+      this.setState({characterIndex: this.state.characterIndex-1});
+    }
+  }
+
+  viewNext = () => {
+    // check that there is a next character
+    if (this.state.characterIndex !== this.state.characterArray.length-1) {
+      this.setState({characterIndex: this.state.characterIndex+1});
     }
   }
 }
@@ -266,7 +289,7 @@ const styles = StyleSheet.create({
     fontSize: 17,
   },
   character: {
-    fontSize: 200,
+    fontSize: 180,
     marginTop: 76,
     marginBottom: 76,
   },
