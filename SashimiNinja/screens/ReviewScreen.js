@@ -7,10 +7,10 @@ import LogoIcon from '../constants/LogoIcon';
 import HelpIcon from '../constants/HelpIcon';
 import { Icon } from 'expo';
 
-// initail review screen with options for
-// Hiragana, Katakana and Kanji
-// each option presents rows of where to start
-// upon selecting a row, you get details of one character at a time
+/*****  initail review screen with options for                          ******/
+/*****  Hiragana, Katakana and Kanji                                    ******/
+/*****  each option presents rows of where to start                     ******/
+/*****  upon selecting a row, you get details of one character at a time ******/
 export default class ReviewScreen extends React.Component {
   static navigationOptions = {
     title: 'Review',
@@ -41,7 +41,9 @@ export default class ReviewScreen extends React.Component {
           onPress={() => this.props.navigation.navigate('Row', {type: 'Katakana'})}>
           <Text style={styles.largeBtnText}>Katakana</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.largeBtn}>
+        <TouchableOpacity 
+          style={styles.largeBtn}
+          onPress={() => this.props.navigation.navigate('Row', {type: 'Kanji'})}>
           <Text style={styles.largeBtnText}>Kanji</Text>
         </TouchableOpacity>
       </View>
@@ -49,10 +51,8 @@ export default class ReviewScreen extends React.Component {
   }
 }
 
-// TO-DO:
-// figure out how to pass props to detail screen to select between kana/kanji
-// use it to display correct rows
-// for kanji, hardcode it to level 1 until db connection fully integrated
+
+/****** Screen with rows based on type: Hiragana, Katakana, Kanji *****/
 export class ReviewRowScreen extends React.Component {
 
   constructor(props) {
@@ -85,7 +85,10 @@ export class ReviewRowScreen extends React.Component {
       // set the labels with Katakana labels
       this.setState({rowLabeles: KanaLabels.katakanaRowTitles});
     }
-    // add kanji logic after adding asyncstorage and db setup here
+    // only planning to include 1 kanji level so hardcode it for now
+    else {
+      this.setState({rowLabeles: ["Level 1"]});
+    }
   }
 
   // rowBtns allow the user to jump to a specific row
@@ -110,6 +113,9 @@ export class ReviewRowScreen extends React.Component {
 }
 
 
+/****** Detail screen for each character                        *****/
+/****** back and next buttons allow user to go through full set, ******/
+/******  regardless of what row was initially selected           ******/
 export class ReviewDetailScreen extends React.Component {
 
   constructor(props) {
@@ -161,6 +167,8 @@ export class ReviewDetailScreen extends React.Component {
   // have if check for kana/kanji
   render() {
     let data = {};
+    // initially disable back and next buttons, 
+    // then enable based on characterIndex
     let backDisabled = false;
     let nextDisabled = false;
     if (this.state.characterArray.length > 0) {
@@ -172,6 +180,7 @@ export class ReviewDetailScreen extends React.Component {
       nextDisabled = true;
     }
 
+    // if kana, display kana data
     if (this.state.type !== 'Kanji') {
       if (!data.romaji)
         data.romaji = "";
@@ -206,10 +215,42 @@ export class ReviewDetailScreen extends React.Component {
         </View>
       );
     } else {
+      // else, show kanji data with readings
       return (
         <View style={styles.container}>
-          <Text style={styles.centerText}>{this.state.type} {data.meaning}</Text>
-          <Text>{ data.romaji }</Text>
+          <View style={styles.rowCenter}>
+            <Text style={styles.regularText}>{this.state.type} - </Text>
+            <Text style={styles.regularText}>{data.meaning}</Text>
+          </View>
+          <View style={styles.rowAround}>
+            <Icon.Ionicons
+              name='ios-arrow-back'
+              size={60}
+              style={styles.icon}
+              disabled={backDisabled}
+              onPress={this.viewPrevious}
+            />
+            <Text style={styles.character}>{ data.kanji }</Text>
+            <Icon.Ionicons
+              name='ios-arrow-forward'
+              size={60}
+              style={styles.icon}
+              disabled={nextDisabled}
+              onPress={this.viewNext}
+            />
+          </View>
+          <View style={styles.rowCenter}>
+            <Text style={styles.boldLabelText}>Kunyomi: </Text>
+            <Text style={styles.labelText}>{ data.kunyomi }</Text>
+          </View>
+          <View style={styles.rowCenter}>
+            <Text style={styles.boldLabelText}>Onyomi: </Text>
+            <Text style={styles.labelText}>{ data.onyomi }</Text>
+          </View>
+          <View style={styles.rowCenter}>
+            <Text style={styles.boldLabelText}>Meaning: </Text>
+            <Text style={styles.labelText}>{ data.meaning }</Text>
+          </View>
         </View>
       );
     }

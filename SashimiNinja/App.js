@@ -5,7 +5,13 @@ import { AppLoading, Asset, Font, Icon } from 'expo';
 // to access db
 import * as firebase from 'firebase';
 import 'firebase/firestore';
-import {Key, Domain, databaseURL, ID, iosID, hDoc} from 'react-native-dotenv';
+import {
+  Key, 
+  Domain, 
+  databaseURL, 
+  ID, 
+  iosID, 
+  hDoc, kDoc, kanji_Doc} from 'react-native-dotenv';
 
 export default class App extends React.Component {
 
@@ -51,6 +57,10 @@ export default class App extends React.Component {
 
     // get hiragana, save it to asyncstorage
     this.getHiragana(db);
+    // get katakana, save it to asyncstorage
+    this.getKatakana(db);
+    // get kanji, save it to asyncstorage
+    this.getKanji(db);
   }
 
   // function to pull in hiragana from db
@@ -69,6 +79,44 @@ export default class App extends React.Component {
           // doc.data() will be undefined in this case
           console.log("No such document!");
       }// catch errors
+    }).catch(function(error) {
+        console.log("Error getting document:", error);
+    });
+  }
+
+  // function to pull in katakana from db
+  getKatakana = (db) => {
+    // specify collection and doc
+    let katakanaDoc = db.collection("katakana").doc(kDoc);
+    let kArray;
+
+    // use arrow function to have correct "this"
+    katakanaDoc.get().then((doc) => {
+      // check for data, if exists, save it 
+      if (doc.exists) {
+          kArray = doc.data().array;
+          AsyncStorage.setItem('katakana', JSON.stringify(kArray));
+      } else {
+          // doc.data() will be undefined in this case
+          console.log("No such document!");
+      }// catch errors
+    }).catch(function(error) {
+        console.log("Error getting document:", error);
+    });
+  }
+
+  // function to pull in kanji from db
+  getKanji = (db) => {
+    let kanjiDoc = db.collection("kanji").doc(kanji_Doc);
+    let kanjiArray;
+
+    kanjiDoc.get().then((doc) => {
+      if (doc.exists) {
+          kanjiArray = doc.data().array;
+          AsyncStorage.setItem('kanji', JSON.stringify(kanjiArray));
+      } else {
+          console.log("No such document!");
+      }
     }).catch(function(error) {
         console.log("Error getting document:", error);
     });
