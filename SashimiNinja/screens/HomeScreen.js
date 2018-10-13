@@ -7,6 +7,10 @@ import { MonoText } from '../components/StyledText';
 
 export default class HomeScreen extends React.Component {
 
+  // date is the date stored in AsyncStorage for reference
+  // dayIndex is to track what day it is, starts from 0
+  // kIndex and pIndex are calculated using the dayIndex
+  // to display a different kanji/phrase based on length of each array
   state = {
     kanjiArray: [],
     phrasesArray: [],
@@ -83,17 +87,23 @@ export default class HomeScreen extends React.Component {
         }
       })
 
+    // calc dayIndex, kIndex, and pIndex
     this.calcKanjiPhrase();
   }
 
   calcKanjiPhrase = async () => {
+    // get current date
     let temp = new Date();
     let now = temp.getDay();
     let index = this.state.dayIndex;
+
+    // if today is a different day from stored day, update it 
     if (now != this.state.date) {
       // if date has changed, update values used to choose kanji and phrase
       console.log("Not");
 
+      // TO-DO: complete the logic to update values
+      // test with different dates to make sure it works
       index++;
       this.setState({dayIndex: index});
 
@@ -102,6 +112,7 @@ export default class HomeScreen extends React.Component {
     let kanjiIndex = 0;
     let pLength = this.state.phrasesArray.length;
     let pIndex = 0;
+
     // logic to choose which kanji and phrase to show
     if (index < kLength) {
       kanjiIndex = index;
@@ -118,6 +129,8 @@ export default class HomeScreen extends React.Component {
   }
 
   render() {
+    // later look into simplifying this
+    // currently keeping to avoid undefined errors on render
     let kanjiArray = [{}];
     let phrasesArray = [{}];
     let kIndex = 0;
