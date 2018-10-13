@@ -1,10 +1,11 @@
 import React from 'react';
-import { View, ScrollView, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, ScrollView, Text, TouchableOpacity, StyleSheet, AsyncStorage } from 'react-native';
 import { createStackNavigator } from 'react-navigation';
 import Colors from '../constants/Colors';
 import KanaLabels from '../constants/KanaLabels';
 import LogoIcon from '../constants/LogoIcon';
 import HelpIcon from '../constants/HelpIcon';
+import { Icon } from 'expo';
 
 // initail review screen with options for
 // Hiragana, Katakana and Kanji
@@ -35,7 +36,9 @@ export default class ReviewScreen extends React.Component {
           onPress={() => this.props.navigation.navigate('Row', {type: 'Hiragana'})}>
             <Text style={styles.largeBtnText}>Hiragana</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.largeBtn}>
+        <TouchableOpacity 
+          style={styles.largeBtn}
+          onPress={() => this.props.navigation.navigate('Row', {type: 'Katakana'})}>
           <Text style={styles.largeBtnText}>Katakana</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.largeBtn}>
@@ -77,7 +80,12 @@ export class ReviewRowScreen extends React.Component {
     if (this.state.type == 'Hiragana') {
       // set the labels with Hiragana labels
       this.setState({rowLabeles: KanaLabels.hiraganaRowTitles});
+    } 
+    else if (this.state.type == 'Katakana') {
+      // set the labels with Katakana labels
+      this.setState({rowLabeles: KanaLabels.katakanaRowTitles});
     }
+    // add kanji logic after adding asyncstorage and db setup here
   }
 
   // rowBtns allow the user to jump to a specific row
@@ -85,10 +93,10 @@ export class ReviewRowScreen extends React.Component {
     let rowBtns = this.state.rowLabeles.map((label, i) => {
       return (
         <TouchableOpacity 
-          style={styles.largeBtn}
+          style={styles.rowBtn}
           key={label}
-          onPress={() => this.props.navigation.navigate('Detail', {type: 'Hiragana', i: i})}>
-            <Text>{ label }</Text>
+          onPress={() => this.props.navigation.navigate('Detail', {type: this.state.type, i: i})}>
+            <Text style={styles.rowBtnText}>{ label }</Text>
         </TouchableOpacity>);
       });
 
@@ -115,14 +123,29 @@ export class ReviewDetailScreen extends React.Component {
         index: this.props.navigation.state.params.i,
         indecies: KanaLabels.kanaIndecies,
         characterIndex: 0,
+        characterArray: [],
       };
   }
 
   componentDidMount() {
     this.setState({ characterIndex: this.state.indecies[this.state.index]});
+
+    // get array from AsyncStorage
+    AsyncStorage.getItem(this.state.type.toLowerCase())
+      .then((characterArray) => {
+        // check for valid data
+        if (characterArray) {
+          try {
+            // parse it to JSON
+            let temp = JSON.parse(characterArray);
+            this.setState({characterArray: temp});
+          } catch(e) {
+            console.log("Error in retrieving character array. " + e.message);
+          }
+        }
+      })
   }
 
-  // TO-DO: figure out how to change title when user starts next row
   static navigationOptions = ({ navigation}) => ({
     title: 'Review - ' + navigation.state.params.type,
     headerRight: (
@@ -137,11 +160,50 @@ export class ReviewDetailScreen extends React.Component {
   // use type to know what information to show
   // have if check for kana/kanji
   render() {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.centerText}>{this.state.type} - {this.state.characterIndex}</Text>
-      </View>
-    );
+    let data = {};
+    if (this.state.characterArray.length > 0) {
+      data = this.state.characterArray[this.state.characterIndex];
+    }
+
+    if (this.state.type !== 'Kanji') {
+      if (!data.romaji)
+        data.romaji = "";
+      data.romaji = data.romaji.toUpperCase();
+      return (
+        <View style={styles.container}>
+          <View style={styles.rowCenter}>
+            <Text style={styles.regularText}>{this.state.type} </Text>
+            <Text style={styles.regularText}>{data.romaji}</Text>
+          </View>
+          <View style={styles.rowAround}>
+            <Icon.Ionicons
+              name='ios-arrow-back'
+              size={30}
+              style={styles.icon}
+              onPress={() => console.log('Hellllo')}
+            />
+            <Text style={styles.character}>{ data.character }</Text>
+            <Icon.Ionicons
+              name='ios-arrow-forward'
+              size={30}
+              style={styles.icon}
+              onPress={() => console.log('Hellllo')}
+            />
+          </View>
+          <View style={styles.rowCenter}>
+            <Text style={styles.boldLabelText}>Romaji: </Text>
+            <Text style={styles.labelText}>{ data.romaji }</Text>
+          </View>
+        </View>
+      );
+    } else {
+      return (
+        <View style={styles.container}>
+          <Text style={styles.centerText}>{this.state.type} {data.meaning}</Text>
+          <Text>{ data.romaji }</Text>
+        </View>
+      );
+    }
   }
 }
 
@@ -162,7 +224,50 @@ const styles = StyleSheet.create({
     fontSize: 34,
     fontWeight: 'bold',
   },
+  rowBtn: {
+    height: 66,
+    justifyContent: 'center',
+    borderBottomWidth: StyleSheet.hairlineWidth,
+  },
+  rowBtnText: {
+    fontSize: 30,
+    marginLeft: 24,
+  },
+  icon: {
+    color: Colors.altColor,
+  },
+
   centerText: {
     textAlign: 'center',
-  }
+  },
+  row: {
+    flexDirection: 'row',
+  },
+  rowCenter: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  rowAround: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+  },
+  
+
+  regularText: {
+    fontSize: 20,
+  },
+  boldLabelText: {
+    fontWeight: 'bold',
+    fontSize: 17,
+  },
+  labelText: {
+    fontSize: 17,
+  },
+  character: {
+    fontSize: 200,
+    marginTop: 76,
+    marginBottom: 76,
+  },
 });
