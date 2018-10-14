@@ -61,6 +61,9 @@ export default class App extends React.Component {
     this.getKatakana(db);
     // get kanji, save it to asyncstorage
     this.getKanji(db);
+    // get phrases, save it to asyncstorage
+    this.getPhrases(db);
+    this.setDate();
   }
 
   // function to pull in hiragana from db
@@ -120,6 +123,42 @@ export default class App extends React.Component {
     }).catch(function(error) {
         console.log("Error getting document:", error);
     });
+  }
+
+  // function to pull in phrases from db
+  getPhrases = (db) => {
+    let phrasesDoc = db.collection("phrases").doc('greetings');
+    let phrasesArray;
+
+    phrasesDoc.get().then((doc) => {
+      if (doc.exists) {
+        phrasesArray = doc.data().array;
+        AsyncStorage.setItem('phrases', JSON.stringify(phrasesArray));
+      } else {
+          console.log("No such document!");
+      }
+    }).catch(function(error) {
+        console.log("Error getting document:", error);
+    });
+  }
+
+  // function to set date for kanji/phrase of the day calc
+  setDate = () => {
+    AsyncStorage.getItem('date')
+      .then((date) => {
+        // check for valid data
+        if (!date) {
+          let today = new Date();
+          AsyncStorage.setItem('date', JSON.stringify(today.getDay()));
+        }
+      })
+    AsyncStorage.getItem('dayIndex')
+      .then((index) => {
+        // check for valid data
+        if (!index) {
+          AsyncStorage.setItem('dayIndex', JSON.stringify(0));
+        }
+      })
   }
 
   _loadResourcesAsync = async () => {
