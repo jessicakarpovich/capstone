@@ -6,12 +6,19 @@ import LogoIcon from '../constants/LogoIcon';
 import { MonoText } from '../components/StyledText';
 import { app } from 'firebase';
 
+/****** Display kanji and phrase of the day to the user *******/
+/****** Update the content each new day the user logs in *******/
+/****** Once you cycle through all the array indecies for kanji/phrase, *******/
+/****** start over from index 0 *******/
 export default class HomeScreen extends React.Component {
 
-  // date is the date stored in AsyncStorage for reference
-  // dayIndex is to track what day it is, starts from 0
-  // kIndex and pIndex are calculated using the dayIndex
-  // to display a different kanji/phrase based on length of each array
+  // date: date stored in AsyncStorage for reference of the last day
+  // -> only has the day value, obtained through date.getDay() (0-6)
+  // dayIndex: track what day it is, starts from 0-endless
+  // -> internal counter for displaying next data
+  // kIndex and pIndex: calculated using the dayIndex
+  // -> to display the kanji/phrase based on each array length
+  // loaded: false until data is fully loaded, ready for display 
   state = {
     kanjiArray: null,
     phrasesArray: null,
@@ -22,8 +29,7 @@ export default class HomeScreen extends React.Component {
     loaded: false,
   }
 
-  // for now hardcode it to display home, 
-  // later test displaying logged in username if reasonable
+  // set logo icon and remove header bottom border
   static navigationOptions = {
     title: 'Home',
     headerLeft: (
@@ -42,144 +48,116 @@ export default class HomeScreen extends React.Component {
   }
 
   getData = async () => {
+    // create temp variable to store data into
     let temp;
-    // get kanji array from AsyncStorage
-    /*AsyncStorage.getItem('kanji')
-      .then((kanjiArray) => {
-        // check for valid data
-        if (kanjiArray) {
-          try {
-            // parse it to JSON
-            let temp = JSON.parse(kanjiArray);
-            this.setState({kanjiArray: temp});
-          } catch(e) {
-            console.log("Error in retrieving character array. " + e.message);
-          }
-        }
-      })*/
+
+    // try getting the kanji array from async storage
     try {
       temp = await AsyncStorage.getItem('kanji');
+      // if available, set to state
       if (temp !== null) {
         this.setState({kanjiArray: JSON.parse(temp)});
       }
     } catch (err) {
       console.log("Error getting kanji array", err);
     }
+
+    // try getting the phrases array
     try {
       temp = await AsyncStorage.getItem('phrases');
+      // if available, set to state
       if (temp !== null) {
         this.setState({phrasesArray: JSON.parse(temp)});
       }
     } catch (err) {
       console.log("Error getting phrases array", err);
     }
+
+    // try getting the date (day of the week as int 0-6)
     try {
       temp = await AsyncStorage.getItem('date');
+      // if available, set to state
       if (temp !== null) {
         this.setState({date: JSON.parse(temp)});
       }
     } catch (err) {
       console.log("Error getting date", err);
     }
-    // get date from AsyncStorage
-    /*AsyncStorage.getItem('date', (err, date) => {
-      // check for valid data
-      if (date !== null) {
-        // parse it to JSON
-        let appDate = JSON.parse(date);
-        this.setState({date: appDate});
-      } if (err) {
-        console.log(err); 
-      }
-    })*/
+
+    // try getting dayIndex
     try {
       temp = await AsyncStorage.getItem('dayIndex');
+      // if available, set to state
       if (temp !== null) {
-        console.log(temp);
         this.setState({dayIndex: JSON.parse(temp)});
       }
     } catch (err) {
       console.log("Error getting day index", err);
     }
-    // get dayIndex from AsyncStorage
-    /*AsyncStorage.getItem('dayIndex')
-      .then((index) => {
-        // check for valid data
-        if (index) {
-          try {
-            dayIndex = JSON.parse(index);
-            this.setState({dayIndex: dayIndex});
-          } catch(e) {
-            console.log("Error in retrieving date. " + e.message);
-          }
-        }
-      })*/
-    
-
-    //this.setState({loaded: true});
   }
 
+  // calc kanji/phrase to display using date and current date
   calcKanjiPhrase = () => {
     // get current date
     let temp = new Date();
-    let now = temp.getDay();
+    //let now = temp.getDay();
+
+    let now = 1;
+
+    // get day and day counter gotten from asyncstorage
     let date = this.state.date;
     let index = this.state.dayIndex;
+    // initially, set kanjiArray and phrasesArray vars to null
     let kLength = null;
     let pLength = null;
 
     // if today is a different day from stored day, update it 
     if (now != date) {
-      console.log(now);
-      console.log(date);
       // if date has changed, update values used to choose kanji and phrase
-      console.log("Not");
-      // TO-DO: complete the logic to update values
-      // test with different dates to make sure it works
+      // add one to day index counter
       index = index+1;
+      // set new day index and date
       this.setState({dayIndex: index});
       this.setState({date: date});
-
+      // set these values to async storage too
       AsyncStorage.setItem('date', JSON.stringify(now));
       AsyncStorage.setItem('dayIndex', JSON.stringify(index));
     }
-    if (this.state.kanjiArray) {
-      kLength = this.state.kanjiArray.length;
-      console.log("sadsa");
-      console.log(kLength);
-    }
+    // set kanji and phrases array indecies to dayIndex at first
     let kanjiIndex = index;
-    if (this.state.phrasesArray) {
-      pLength = this.state.phrasesArray.length;
-    }
     let pIndex = index;
 
-    // logic to choose which kanji and phrase to show
-    if (index < kLength) {
-      kanjiIndex = index;
-    } else if (kLength > 0) {
-      kanjiIndex = index % kLength;
-      console.log("daw");
-      console.log(index);
-      console.log(kLength);
-      console.log(kanjiIndex);
+    // if kanji array has loaded, 
+    if (this.state.kanjiArray) {
+      // get the length
+      kLength = this.state.kanjiArray.length;
     }
-    if (index < pLength) {
-      pIndex = index;
-    } else if (pLength > 0) {
+    // if phrases array has loaded,
+    if (this.state.phrasesArray) {
+      // set the length
+      pLength = this.state.phrasesArray.length;
+    }
+
+    // logic to choose which kanji and phrase to show
+    // if array length is greater than 0, 
+    if (kLength > 0) {
+      // calculate remainder
+      kanjiIndex = index % kLength;
+    }
+    if (pLength > 0) {
       pIndex = index % pLength;
     }
     this.setState({kIndex: kanjiIndex});
     this.setState({pIndex: pIndex});
 
+    // set loaded to true once done
     this.setState({loaded: true});
   }
 
   render() {
-    //if (!this.state.kanjiArray || !this.state.kIndex) {
+    // check that everything is loaded to avoid undefined
+    // when trying to access kanji at kIndex in array
     if (!this.state.loaded) {
-      //console.log(this.state.kanjiArray);
-      //console.log(this.state.kIndex);
       return (
         <Text>Hello</Text>
       );
