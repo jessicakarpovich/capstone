@@ -81,7 +81,7 @@ export default class HomeScreen extends React.Component {
         this.setState({date: JSON.parse(temp)});
       }
     } catch (err) {
-      console.log("Error getting date", err);
+      console.lsog("Error getting date", err);
     }
 
     // try getting dayIndex
@@ -100,9 +100,7 @@ export default class HomeScreen extends React.Component {
   calcKanjiPhrase = () => {
     // get current date
     let temp = new Date();
-    //let now = temp.getDay();
-
-    let now = 1;
+    let now = temp.getDay();
 
     // get day and day counter gotten from asyncstorage
     let date = this.state.date;
@@ -147,6 +145,7 @@ export default class HomeScreen extends React.Component {
     if (pLength > 0) {
       pIndex = index % pLength;
     }
+    // set kanji and phrase index
     this.setState({kIndex: kanjiIndex});
     this.setState({pIndex: pIndex});
 
