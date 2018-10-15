@@ -161,8 +161,7 @@ Resources
     - Recent Scores
     - Hiragana Chart
     - Katakana Chart
-    - Search/Translate Box
-        Search
+    - Search/Translate
     - Getting Started Guides
 
 Settings
@@ -177,21 +176,16 @@ Recent Scores
 
 ### Browser Support
 
-The React version of the app will have JS and CSS support for at least the last two versions of popular browsers like Chrome, Firefox, and Safari with screen sizes of at least 320px wide. Few devices have a smaller width so I see no point in accomodating them. Besides that, mobile users will always have the option of using the React Native app instead. As for the browsers, most people use one of the three I mentioned above. If they don't, they most likely know some websites may be broken. Similarly, users know they should keep their software updated for security reasons. If they aren't aware or don't care to update, it's on them if something doesn't work as expected.
-
-The React Native version of this app will support portrait mode in iOS and Android. Because of the nature of the app, it will look and be most usable in portrait mode, so I will not be adding support for landscape mode.
+This app will support portrait mode in iOS and Android. Because of the nature of the app, it will look and be most usable in portrait mode, so I will not be adding support for landscape mode.
 
 ## Infrastructure
 
 ### Technical Requirements
 
 * Firebase: store users, user progress, and app content
-* Github Pages: deploy React app
-
 
 ### Programming Languages
 
-* [React](https://reactjs.org/)
 * [React Native](https://facebook.github.io/react-native/)
 
 ### Integrations
@@ -201,12 +195,4 @@ The React Native version of this app will support portrait mode in iOS and Andro
 
 ### Deployment Workflow
 
-After completing the intial setup with gh-pages as documented [here](https://github.com/gitname/react-gh-pages) I will simply run `npm run deploy` to deploy my React app with the new changes to GitHub pages.
-
-For the React Native app, I will use the steps outlined [here](https://www.christianengvall.se/react-native-build-for-ios-app-store/) and [here](https://codeburst.io/how-to-deploy-a-create-react-native-app-to-the-appstore-229a8fa36fb1) to deploy it. As I don't intend to get an Apple Developer account, I will only be able to locally test the iOS version of the app. After adding a new feature, I will build it and test it on my Android and iOS devices.
-
-### Web Host
-
-* GitHub Pages (for React app)
-
-*Note:* Will provide link after testing.
+I will use the steps outlined [here](https://www.christianengvall.se/react-native-build-for-ios-app-store/) and [here](https://codeburst.io/how-to-deploy-a-create-react-native-app-to-the-appstore-229a8fa36fb1) to deploy it. As I don't intend to get an Apple Developer account, I will only be able to locally test the iOS version of the app. After adding a new feature, I will build it and test it on my Android and iOS devices.
