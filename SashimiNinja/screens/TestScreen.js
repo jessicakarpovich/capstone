@@ -119,6 +119,7 @@ export default class TestScreen extends React.Component {
 
     // based on the values of this.state.content at each index
     // create an array of Japanese content (a-n, ga-pa, etc.)
+    // use concat() to add to array values, not to create an array of arrays
     this.state.content.forEach(function(value, i) {
       switch (i) {
         case 0:
@@ -162,7 +163,11 @@ export default class TestScreen extends React.Component {
         break;
       }
     });
-    console.log(contentArray);
+    this.props.navigation.navigate('Detail', {
+      content: contentArray, 
+      lang: this.state.language, 
+      num: this.state.numOfQuest
+    });
   }
 
   render() {
@@ -317,6 +322,40 @@ export default class TestScreen extends React.Component {
           <Text style={styles.btnTextActive}>Mission Start</Text>
         </TouchableOpacity>
       </ScrollView>
+    );
+  }
+}
+
+
+export class TestDetailScreen extends React.Component {
+  
+  state = {
+    contentArray: this.props.navigation.state.params.content,
+    language: this.props.navigation.state.params.lang,
+    totalQuest: this.props.navigation.state.params.num,
+    currentQuest: 0,
+  }
+
+  static navigationOptions = ({ navigation}) => ({
+    title: 'Mission in Progress',
+    headerStyle: {
+      backgroundColor: Colors.navBkgd,
+    },
+  });
+
+  // set diff instruct text based on lang value
+  render() {
+    return (
+      <View>
+        <Text>Question {this.state.currentQuest} / {this.state.totalQuest}</Text>
+        <Text>
+          {
+            this.state.language == 'en'
+            ? 'Select the corresponding character'
+            : 'Select the matching romaji'
+          }
+        </Text>
+      </View>
     );
   }
 }

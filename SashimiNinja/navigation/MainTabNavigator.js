@@ -12,6 +12,7 @@ import SettingsScreen from '../screens/SettingsScreen';
 
 //import detail screens
 import { ReviewRowScreen, ReviewDetailScreen } from '../screens/ReviewScreen';
+import { TestDetailScreen } from '../screens/TestScreen';
 
 import Colors from '../constants/Colors';
 
@@ -56,6 +57,10 @@ ReviewStack.navigationOptions = {
 
 const TestStack = createStackNavigator({
   Test: TestScreen,
+  Detail: TestDetailScreen,
+},
+{
+    initialRouteName: 'Test',
 });
 
 TestStack.navigationOptions = {
