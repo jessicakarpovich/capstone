@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, Text, TextInput, Button, TouchableOpacity, ScrollView } from 'react-native';
+import { View, StyleSheet, Text, TextInput, Button, TouchableOpacity, ScrollView, AsyncStorage } from 'react-native';
 import Colors from '../constants/Colors';
 import LogoIcon from '../constants/LogoIcon';
 import HelpIcon from '../constants/HelpIcon';
@@ -50,7 +50,119 @@ export default class TestScreen extends React.Component {
 
   // function to update user selected language
   selectLang = (e) => {
-    this.setState({lang: e});
+    this.setState({language: e});
+  }
+
+  validateInput = () => {
+    let isValid = true;
+    // check that num of ?s is not negative, then round to int
+    if (this.state.numOfQuest > 0) {
+      this.setState({numOfQuest: Math.round(this.state.numOfQuest)});
+    } else {
+      isValid = false;
+    }
+    // check that whole array is not false,
+    // if it is, it means user hasn't selected content, test shouldn't start
+    if (this.state.content.every( (val, i, arr) => val === arr[0] ) && !this.state.content[0]) {
+      isValid = false;
+    }
+
+    // if all is valid, generate array of content
+    if (isValid) {
+      console.log('Success');
+      this.generateContentArray();
+    }
+  }
+
+  generateContentArray = async () => {
+    let contentArray = [];
+    let temp;
+
+    // load character arrays
+    // try getting the hiragana array from async storage
+    try {
+      temp = await AsyncStorage.getItem('hiragana');
+      // if available, set to state
+      if (temp !== null) {
+        this.setState({hArray: JSON.parse(temp)});
+      }
+    } catch (err) {
+      console.log("Error getting kanji array", err);
+    }
+
+    // try getting the katakana array from async storage
+    try {
+      temp = await AsyncStorage.getItem('katakana');
+      // if available, set to state
+      if (temp !== null) {
+        this.setState({kArray: JSON.parse(temp)});
+      }
+    } catch (err) {
+      console.log("Error getting kanji array", err);
+    }
+
+    // try getting the kanji array from async storage
+    try {
+      temp = await AsyncStorage.getItem('kanji');
+      // if available, set to state
+      if (temp !== null) {
+        this.setState({kanjiArray: JSON.parse(temp)});
+      }
+    } catch (err) {
+      console.log("Error getting kanji array", err);
+    }
+
+    // grab data loaded from async storage
+    let hArray = this.state.hArray;
+    let kArray = this.state.kArray;
+    let kanjiArray = this.state.kanjiArray;
+
+    // based on the values of this.state.content at each index
+    // create an array of Japanese content (a-n, ga-pa, etc.)
+    this.state.content.forEach(function(value, i) {
+      switch (i) {
+        case 0:
+        // if at index 0, the value is true, 
+        // add first part of hiragana array to contentArray
+          if (value) {
+            contentArray = contentArray.concat(hArray.slice(0, 46));
+          }
+          break;
+        case 1:
+          if (value) {
+            contentArray = contentArray.concat(hArray.slice(46, 71));
+          }
+          break;
+        case 2:
+          if (value) {
+            contentArray = contentArray.concat(hArray.slice(71, 104));
+          }
+          break;
+        case 3:
+        // if at index 0, the value is true, 
+        // add first part of katakana array to contentArray
+          if (value) {
+            contentArray = contentArray.concat(kArray.slice(0, 46));
+          }
+          break;
+        case 4:
+          if (value) {
+            contentArray = contentArray.concat(kArray.slice(46, 71));
+          }
+          break;
+        case 5:
+          if (value) {
+            contentArray = contentArray.concat(kArray.slice(71, 104));
+          }
+          break;
+        case 6:
+        if (value) {
+          contentArray = contentArray.concat(kanjiArray);
+        }
+        break;
+      }
+    });
+    console.log(contentArray);
   }
 
   render() {
@@ -161,7 +273,7 @@ export default class TestScreen extends React.Component {
           <View>
             <TextInput 
               keyboardType = 'numeric'
-              value={this.state.numOfQuest}
+              value={`${this.state.numOfQuest}`}
               onChangeText={this.changeNumofQuest}
               style={styles.textInput}
             />
@@ -172,18 +284,34 @@ export default class TestScreen extends React.Component {
           <View style={styles.row}>
             <TouchableOpacity  
               onPress={() => this.selectLang('en')}
-              style={styles.categoryBtn}>
-              <Text style={styles.btnText}>English/Romaji</Text> 
+              style={
+                this.state.language == 'en'
+                  ? styles.categoryBtnActive
+                  : styles.categoryBtn
+              }>
+              <Text style={
+                this.state.language == 'en'
+                ? styles.btnTextActive
+                : styles.btnText
+              }>English/Romaji</Text> 
             </TouchableOpacity>
             <TouchableOpacity  
               onPress={() => this.selectLang('jp')}
-              style={styles.categoryBtnActive}>
-              <Text style={styles.btnTextActive}>Japanese</Text> 
+              style={
+                this.state.language == 'jp'
+                  ? styles.categoryBtnActive
+                  : styles.categoryBtn
+              }>
+              <Text style={
+                this.state.language == 'jp'
+                ? styles.btnTextActive
+                : styles.btnText
+              }>Japanese</Text> 
             </TouchableOpacity>
           </View>
         </View>
         <TouchableOpacity 
-          onPress={() => console.log("preparing questions")}
+          onPress={this.validateInput}
           title="Mission Start"
           style={styles.submitBtn}>
           <Text style={styles.btnTextActive}>Mission Start</Text>
