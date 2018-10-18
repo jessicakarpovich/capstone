@@ -69,7 +69,6 @@ export default class TestScreen extends React.Component {
 
     // if all is valid, generate array of content
     if (isValid) {
-      console.log('Success');
       this.generateContentArray();
     }
   }
@@ -328,13 +327,6 @@ export default class TestScreen extends React.Component {
 
 
 export class TestDetailScreen extends React.Component {
-  
-  state = {
-    contentArray: this.props.navigation.state.params.content,
-    language: this.props.navigation.state.params.lang,
-    totalQuest: this.props.navigation.state.params.num,
-    currentQuest: 0,
-  }
 
   static navigationOptions = ({ navigation}) => ({
     title: 'Mission in Progress',
@@ -342,6 +334,36 @@ export class TestDetailScreen extends React.Component {
       backgroundColor: Colors.navBkgd,
     },
   });
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      contentArray: this.props.navigation.state.params.content,
+      language: this.props.navigation.state.params.lang,
+      totalQuest: this.props.navigation.state.params.num,
+      currentQuest: 0,
+      currentCharacter: this.generateRandomCharacter,
+    };
+  }
+
+  // set current character to be a random character in range of character array
+  componentDidMount() {
+    this.setState({ currentCharacter: this.generateRandomCharacter()});
+  }
+
+  // function to get random integer including startIndex as part of range
+  // endIndex is excluded
+  generateRandomNumber = (startIndex, endIndex) => {
+    startIndex = Math.ceil(startIndex);
+    endIndex = Math.floor(endIndex);
+    return Math.floor(Math.random() * (endIndex - startIndex)) + startIndex;
+  }
+
+  // get randInt and use it to get randCharacter
+  generateRandomCharacter = () => {
+    let randInt = this.generateRandomNumber(this.state.currentQuest, this.state.totalQuest);
+    return this.state.contentArray[randInt];
+  }
 
   // set diff instruct text based on lang value
   render() {
@@ -355,6 +377,7 @@ export class TestDetailScreen extends React.Component {
             : 'Select the matching romaji'
           }
         </Text>
+        <Text>{ this.state.currentCharacter ? this.state.currentCharacter.romaji : 'nope' }</Text>
       </View>
     );
   }
