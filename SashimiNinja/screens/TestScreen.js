@@ -335,6 +335,7 @@ export class TestDetailScreen extends React.Component {
     },
   });
 
+  // NOTE: current character is an int
   constructor(props) {
     super(props);
     this.state = {
@@ -342,13 +343,18 @@ export class TestDetailScreen extends React.Component {
       language: this.props.navigation.state.params.lang,
       totalQuest: this.props.navigation.state.params.num,
       currentQuest: 0,
-      currentCharacter: this.generateRandomCharacter,
+      currentCharacter: null,
+      answers: null,
     };
   }
 
   // set current character to be a random character in range of character array
-  componentDidMount() {
-    this.setState({ currentCharacter: this.generateRandomCharacter()});
+  // wait for state to be set before generating answers
+  componentDidMount = async () => {
+    await this.setState({ currentCharacter: this.generateRandomCharacter()});
+
+    // generate answers
+    this.generateAnswers();
   }
 
   // function to get random integer including startIndex as part of range
@@ -361,23 +367,89 @@ export class TestDetailScreen extends React.Component {
 
   // get randInt and use it to get randCharacter
   generateRandomCharacter = () => {
-    let randInt = this.generateRandomNumber(this.state.currentQuest, this.state.totalQuest);
-    return this.state.contentArray[randInt];
+    let randInt = this.generateRandomNumber(0, this.state.contentArray.length);
+    return randInt;
+  }
+
+  // need to generate 3 fake answers to mix with corret answer
+  generateAnswers = () => {
+    let ans1 = this.generateRandomNumber(0, this.state.contentArray.length);
+    let ans2 = this.generateRandomNumber(0, this.state.contentArray.length);
+    let ans3 = this.generateRandomNumber(0, this.state.contentArray.length);
+
+    // make sure answers don't overlap
+    while (this.state.contentArray[ans1] === this.state.currentCharacter) {
+      ans1 = this.generateRandomNumber(0, this.state.contentArray.length);
+    }
+    while (ans2 === ans1 || ans2 === ans3 || this.state.contentArray[ans2] === this.state.currentCharacter) {
+      ans2 = this.generateRandomNumber(0, this.state.contentArray.length);
+    }
+    while (ans3 === ans1 || this.state.contentArray[ans3] === this.state.currentCharacter) {
+      ans3 = this.generateRandomNumber(0, this.state.contentArray.length);
+    }
+
+    // array for answers
+    let ansArray = [ans1, ans2, ans3, this.state.currentCharacter];
+    // create array with 4 indexes
+    let indexArray = [0, 1, 2, 3];
+    // create an array for scrambled answers
+    let randArray = new Array(4);
+
+    // loop through and set the values
+    // get a rand int based on array length
+    // get the value stored at the random index
+    // delete the value saved in randArray from ansArray to not have duplicates
+    for (let i=0; i < randArray.length; i++) {
+      randNum = Math.floor(Math.random()*indexArray.length);
+      randArray[i] = ansArray[randNum];
+      console.log('randarray');
+      console.log(randArray);
+      indexArray.splice(randNum, 1);
+      ansArray.splice(randNum, 1);
+    }
+
+    // set index values to state to display to user
+    this.setState({answers: randArray});
   }
 
   // set diff instruct text based on lang value
+  // display character or kanji, based on character values
+  ////// TO-DO: add lang check and display question/answers in lang opposite
+  // for now defaults to Japanese
   render() {
     return (
-      <View>
-        <Text>Question {this.state.currentQuest} / {this.state.totalQuest}</Text>
-        <Text>
+      <View style={styles.container}>
+        <View style={styles.centerColumn}>
+          <Text>Question {this.state.currentQuest} / {this.state.totalQuest}</Text>
+          <Text>
+            {
+              this.state.language == 'en'
+              ? 'Select the corresponding character'
+              : 'Select the matching romaji'
+            }
+          </Text>
+          <Text style={styles.character}>
+            {
+              this.state.contentArray.length > 0 && this.state.contentArray[this.state.currentCharacter]
+              ? this.state.contentArray[this.state.currentCharacter].character
+                ? this.state.contentArray[this.state.currentCharacter].character
+                : this.state.contentArray[this.state.currentCharacter].meaning
+                ? this.state.contentArray[this.state.currentCharacter].meaning
+                  : ''
+              : ''
+            }
+          </Text>
           {
-            this.state.language == 'en'
-            ? 'Select the corresponding character'
-            : 'Select the matching romaji'
+            this.state.answers && this.state.currentCharacter
+            ? <View>
+                <Text>{this.state.contentArray[this.state.answers[0]].romaji}</Text>
+                <Text>{this.state.contentArray[this.state.answers[1]].romaji}</Text>
+                <Text>{this.state.contentArray[this.state.answers[2]].romaji}</Text>
+                <Text>{this.state.contentArray[this.state.answers[3]].romaji}</Text>
+              </View>
+            : ''
           }
-        </Text>
-        <Text>{ this.state.currentCharacter ? this.state.currentCharacter.romaji : 'nope' }</Text>
+        </View>
       </View>
     );
   }
@@ -436,5 +508,10 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.navBkgd,
     padding: 2,
     borderRadius: 6,
+  },
+  character: {
+    fontSize: 180,
+    marginTop: 76,
+    marginBottom: 76,
   },
 });
