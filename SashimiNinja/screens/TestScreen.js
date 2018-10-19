@@ -354,7 +354,7 @@ export class TestDetailScreen extends React.Component {
       currentQuest: null,
       currentCharacter: null,
       answers: null,
-      numCorrect: null,
+      numCorrect: 0,
     };
   }
 
@@ -388,13 +388,13 @@ export class TestDetailScreen extends React.Component {
     let ans3 = this.generateRandomCharacter();
 
     // make sure answers don't overlap
-    while (this.state.contentArray[ans1] === this.state.currentCharacter) {
+    while (ans1 === ans2 || ans1 === ans3 || this.state.contentArray[ans1] === this.state.currentCharacter) {
       ans1 = this.generateRandomCharacter();
     }
     while (ans2 === ans1 || ans2 === ans3 || this.state.contentArray[ans2] === this.state.currentCharacter) {
       ans2 = this.generateRandomCharacter();
     }
-    while (ans3 === ans1 || this.state.contentArray[ans3] === this.state.currentCharacter) {
+    while (ans3 === ans1 || ans3 === ans2 || this.state.contentArray[ans3] === this.state.currentCharacter) {
       ans3 = this.generateRandomCharacter();
     }
 
@@ -405,7 +405,6 @@ export class TestDetailScreen extends React.Component {
     // create an array for scrambled answers
     let randArray = new Array(4);
 
-    // loop through and set the values
     // get a rand int based on array length
     // get the value stored at the random index
     // delete the value saved in randArray from ansArray to not have duplicates
@@ -425,19 +424,36 @@ export class TestDetailScreen extends React.Component {
     let cur = this.state.currentQuest+1;
 
     if (cur < this.state.totalQuest) {
+      // if this is not the last question, and the answer is correct
       if (this.state.currentCharacter === this.state.answers[ans]) {
-        this.setState({ numCorrect: this.state.numCorrect+1});
+
+        // update # correct, current #, and get a new question
+        await this.setState({ numCorrect: this.state.numCorrect+1});
         await this.setState({ currentQuest: this.state.currentQuest+1});
         await this.setState({ currentCharacter: this.generateRandomCharacter()});
 
         // generate answers
         this.generateAnswers();
-      } else {
-        console.log('WRONG');
+      } 
+      else {
+        // if incorrect ans, add 1 to current # and generate new question
+        await this.setState({ currentQuest: this.state.currentQuest+1});
+        await this.setState({ currentCharacter: this.generateRandomCharacter()});
+
+        // generate answers
+        this.generateAnswers();
       }
-    } else if (cur === this.state.totalQuest) {
+    } 
+    // if last question
+    else if (cur === this.state.totalQuest) {
+      // if answer is correct, update # correct and current #
+        if (this.state.currentCharacter === this.state.answers[ans]) {
+          await this.setState({ numCorrect: this.state.numCorrect+1});
+          await this.setState({ currentQuest: this.state.currentQuest+1});
+        }
+      // navigate to screen with score
       this.props.navigation.navigate('Complete', {
-        correct: cur, 
+        correct: this.state.numCorrect, 
         total: this.state.totalQuest,
       });
    }
@@ -517,6 +533,7 @@ export class TestCompleteScreen extends React.Component {
   }
 
   componentDidMount = async () => {
+    // get # correct and total, calc percent and round
     await this.setState({ correct: this.props.navigation.state.params.correct });
     await this.setState({ total: this.props.navigation.state.params.total });
     await this.setState({ percent: ((this.state.correct / this.state.total) * 100).toFixed(2) });
@@ -524,7 +541,7 @@ export class TestCompleteScreen extends React.Component {
 
   navigate = () => {
     this.props.navigation.dispatch(resetAction);
-    this.props.navigation.navigate('Test')
+    this.props.navigation.navigate('Test');
   }
 
   render() {
@@ -543,15 +560,15 @@ export class TestCompleteScreen extends React.Component {
   }
 }
 
+// before navigating, reset screen state to avoid errors
 const resetAction = StackActions.reset({
-  index: 2,
+  index: 0,
   actions: [
-    NavigationActions.navigate({ routeName: 'Test'}),
-    NavigationActions.navigate({ routeName: 'Detail'}),
-    NavigationActions.navigate({ routeName: 'Complete'})
+    NavigationActions.navigate({ routeName: 'Test'})
   ]
 })
 
+// get width to have answers stretch the width of the screen
 const width = Dimensions.get('window').width;
 
 const styles = StyleSheet.create({
