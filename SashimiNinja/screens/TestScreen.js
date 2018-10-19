@@ -1,8 +1,18 @@
 import React from 'react';
-import { View, StyleSheet, Text, TextInput, Button, TouchableOpacity, ScrollView, AsyncStorage } from 'react-native';
+import { 
+  View,
+  StyleSheet, 
+  Text, 
+  TextInput, 
+  Button, 
+  TouchableOpacity, 
+  ScrollView, 
+  AsyncStorage, 
+  Dimensions } from 'react-native';
 import Colors from '../constants/Colors';
 import LogoIcon from '../constants/LogoIcon';
 import HelpIcon from '../constants/HelpIcon';
+import { StackActions, NavigationActions } from 'react-navigation';
 
 export default class TestScreen extends React.Component {
   // num ofquest is # of questions user requested, default 15
@@ -316,7 +326,6 @@ export default class TestScreen extends React.Component {
         </View>
         <TouchableOpacity 
           onPress={this.validateInput}
-          title="Mission Start"
           style={styles.submitBtn}>
           <Text style={styles.btnTextActive}>Mission Start</Text>
         </TouchableOpacity>
@@ -342,9 +351,10 @@ export class TestDetailScreen extends React.Component {
       contentArray: this.props.navigation.state.params.content,
       language: this.props.navigation.state.params.lang,
       totalQuest: this.props.navigation.state.params.num,
-      currentQuest: 0,
+      currentQuest: null,
       currentCharacter: null,
       answers: null,
+      numCorrect: null,
     };
   }
 
@@ -352,7 +362,7 @@ export class TestDetailScreen extends React.Component {
   // wait for state to be set before generating answers
   componentDidMount = async () => {
     await this.setState({ currentCharacter: this.generateRandomCharacter()});
-
+    this.setState({ currentQuest: 0});
     // generate answers
     this.generateAnswers();
   }
@@ -365,7 +375,7 @@ export class TestDetailScreen extends React.Component {
     return Math.floor(Math.random() * (endIndex - startIndex)) + startIndex;
   }
 
-  // get randInt and use it to get randCharacter
+  // get randInt and use it to get randCharacter as an int
   generateRandomCharacter = () => {
     let randInt = this.generateRandomNumber(0, this.state.contentArray.length);
     return randInt;
@@ -373,19 +383,19 @@ export class TestDetailScreen extends React.Component {
 
   // need to generate 3 fake answers to mix with corret answer
   generateAnswers = () => {
-    let ans1 = this.generateRandomNumber(0, this.state.contentArray.length);
-    let ans2 = this.generateRandomNumber(0, this.state.contentArray.length);
-    let ans3 = this.generateRandomNumber(0, this.state.contentArray.length);
+    let ans1 = this.generateRandomCharacter();
+    let ans2 = this.generateRandomCharacter();
+    let ans3 = this.generateRandomCharacter();
 
     // make sure answers don't overlap
     while (this.state.contentArray[ans1] === this.state.currentCharacter) {
-      ans1 = this.generateRandomNumber(0, this.state.contentArray.length);
+      ans1 = this.generateRandomCharacter();
     }
     while (ans2 === ans1 || ans2 === ans3 || this.state.contentArray[ans2] === this.state.currentCharacter) {
-      ans2 = this.generateRandomNumber(0, this.state.contentArray.length);
+      ans2 = this.generateRandomCharacter();
     }
     while (ans3 === ans1 || this.state.contentArray[ans3] === this.state.currentCharacter) {
-      ans3 = this.generateRandomNumber(0, this.state.contentArray.length);
+      ans3 = this.generateRandomCharacter();
     }
 
     // array for answers
@@ -402,14 +412,35 @@ export class TestDetailScreen extends React.Component {
     for (let i=0; i < randArray.length; i++) {
       randNum = Math.floor(Math.random()*indexArray.length);
       randArray[i] = ansArray[randNum];
-      console.log('randarray');
-      console.log(randArray);
       indexArray.splice(randNum, 1);
       ansArray.splice(randNum, 1);
     }
 
     // set index values to state to display to user
     this.setState({answers: randArray});
+  }
+
+  // check user answer against current character
+  checkUserAnswer = async (ans) => {
+    let cur = this.state.currentQuest+1;
+
+    if (cur < this.state.totalQuest) {
+      if (this.state.currentCharacter === this.state.answers[ans]) {
+        this.setState({ numCorrect: this.state.numCorrect+1});
+        await this.setState({ currentQuest: this.state.currentQuest+1});
+        await this.setState({ currentCharacter: this.generateRandomCharacter()});
+
+        // generate answers
+        this.generateAnswers();
+      } else {
+        console.log('WRONG');
+      }
+    } else if (cur === this.state.totalQuest) {
+      this.props.navigation.navigate('Complete', {
+        correct: cur, 
+        total: this.state.totalQuest,
+      });
+   }
   }
 
   // set diff instruct text based on lang value
@@ -420,7 +451,7 @@ export class TestDetailScreen extends React.Component {
     return (
       <View style={styles.container}>
         <View style={styles.centerColumn}>
-          <Text>Question {this.state.currentQuest} / {this.state.totalQuest}</Text>
+          <Text>Question {this.state.currentQuest+1} / {this.state.totalQuest}</Text>
           <Text>
             {
               this.state.language == 'en'
@@ -442,10 +473,22 @@ export class TestDetailScreen extends React.Component {
           {
             this.state.answers && this.state.currentCharacter
             ? <View>
-                <Text>{this.state.contentArray[this.state.answers[0]].romaji}</Text>
-                <Text>{this.state.contentArray[this.state.answers[1]].romaji}</Text>
-                <Text>{this.state.contentArray[this.state.answers[2]].romaji}</Text>
-                <Text>{this.state.contentArray[this.state.answers[3]].romaji}</Text>
+                <TouchableOpacity style={styles.choices}
+                  onPress={() => this.checkUserAnswer(0)}>
+                  <Text style={styles.choicesText}>{this.state.contentArray[this.state.answers[0]].romaji}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.choices}
+                  onPress={() => this.checkUserAnswer(1)}>
+                  <Text style={styles.choicesText}>{this.state.contentArray[this.state.answers[1]].romaji}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.choices}
+                  onPress={() => this.checkUserAnswer(2)}>
+                  <Text style={styles.choicesText}>{this.state.contentArray[this.state.answers[2]].romaji}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.choicesBottom}
+                  onPress={() => this.checkUserAnswer(3)}>
+                  <Text style={styles.choicesText}>{this.state.contentArray[this.state.answers[3]].romaji}</Text>
+                </TouchableOpacity>
               </View>
             : ''
           }
@@ -454,6 +497,62 @@ export class TestDetailScreen extends React.Component {
     );
   }
 }
+
+export class TestCompleteScreen extends React.Component {
+
+  static navigationOptions = ({ navigation}) => ({
+    title: 'Mission Complete',
+    headerStyle: {
+      backgroundColor: Colors.navBkgd,
+    },
+  });
+
+  constructor(props) {
+    super(props);
+      this.state = {
+        correct: null,
+        total: null,
+        percent: null,
+      };
+  }
+
+  componentDidMount = async () => {
+    await this.setState({ correct: this.props.navigation.state.params.correct });
+    await this.setState({ total: this.props.navigation.state.params.total });
+    await this.setState({ percent: ((this.state.correct / this.state.total) * 100).toFixed(2) });
+  }
+
+  navigate = () => {
+    this.props.navigation.dispatch(resetAction);
+    this.props.navigation.navigate('Test')
+  }
+
+  render() {
+    return (
+      <View style={styles.container}>
+        <Text>Congrats!</Text>
+        <Text>{this.state.correct} / {this.state.total}</Text>
+        <Text>{this.state.percent}%</Text>
+        <TouchableOpacity 
+          onPress={this.navigate}
+          style={styles.submitBtn}>
+          <Text style={styles.btnTextActive}>Close</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
+}
+
+const resetAction = StackActions.reset({
+  index: 2,
+  actions: [
+    NavigationActions.navigate({ routeName: 'Test'}),
+    NavigationActions.navigate({ routeName: 'Detail'}),
+    NavigationActions.navigate({ routeName: 'Complete'})
+  ]
+})
+
+const width = Dimensions.get('window').width;
 
 const styles = StyleSheet.create({
   container: {
@@ -510,8 +609,22 @@ const styles = StyleSheet.create({
     borderRadius: 6,
   },
   character: {
-    fontSize: 180,
+    fontSize: 160,
     marginTop: 76,
     marginBottom: 76,
+  },
+  choices: {
+    width: width,
+    paddingVertical: 10,
+    borderBottomColor: Colors.tabIconDefault,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+  },
+  choicesBottom: {
+    width: width,
+    paddingVertical: 10,
+  },
+  choicesText: {
+    fontSize: 20,
+    textAlign: 'center',
   },
 });
