@@ -472,7 +472,7 @@ export class TestDetailScreen extends React.Component {
             {
               this.state.language == 'en'
               ? 'Select the corresponding character'
-              : 'Select the matching romaji'
+              : 'Select the matching romaji/meaning'
             }
           </Text>
           <Text style={styles.character}>
@@ -480,8 +480,8 @@ export class TestDetailScreen extends React.Component {
               this.state.contentArray.length > 0 && this.state.contentArray[this.state.currentCharacter]
               ? this.state.contentArray[this.state.currentCharacter].character
                 ? this.state.contentArray[this.state.currentCharacter].character
-                : this.state.contentArray[this.state.currentCharacter].meaning
-                ? this.state.contentArray[this.state.currentCharacter].meaning
+                : this.state.contentArray[this.state.currentCharacter].kanji
+                ? this.state.contentArray[this.state.currentCharacter].kanji
                   : ''
               : ''
             }
@@ -491,19 +491,40 @@ export class TestDetailScreen extends React.Component {
             ? <View>
                 <TouchableOpacity style={styles.choices}
                   onPress={() => this.checkUserAnswer(0)}>
-                  <Text style={styles.choicesText}>{this.state.contentArray[this.state.answers[0]].romaji}</Text>
+                  <Text style={styles.choicesText}>
+                  {
+                    this.state.contentArray[this.state.answers[0]].romaji
+                    ? this.state.contentArray[this.state.answers[0]].romaji
+                    : this.state.contentArray[this.state.answers[0]].meaning
+                    
+                  }</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.choices}
                   onPress={() => this.checkUserAnswer(1)}>
-                  <Text style={styles.choicesText}>{this.state.contentArray[this.state.answers[1]].romaji}</Text>
+                  <Text style={styles.choicesText}>
+                  {
+                    this.state.contentArray[this.state.answers[1]].romaji
+                    ? this.state.contentArray[this.state.answers[1]].romaji
+                    : this.state.contentArray[this.state.answers[1]].meaning
+                  }</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.choices}
                   onPress={() => this.checkUserAnswer(2)}>
-                  <Text style={styles.choicesText}>{this.state.contentArray[this.state.answers[2]].romaji}</Text>
+                  <Text style={styles.choicesText}>
+                  {
+                    this.state.contentArray[this.state.answers[2]].romaji
+                    ? this.state.contentArray[this.state.answers[2]].romaji
+                    : this.state.contentArray[this.state.answers[2]].meaning
+                  }</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.choicesBottom}
                   onPress={() => this.checkUserAnswer(3)}>
-                  <Text style={styles.choicesText}>{this.state.contentArray[this.state.answers[3]].romaji}</Text>
+                  <Text style={styles.choicesText}>
+                  {
+                    this.state.contentArray[this.state.answers[3]].romaji
+                    ? this.state.contentArray[this.state.answers[3]].romaji
+                    : this.state.contentArray[this.state.answers[3]].meaning
+                  }</Text>
                 </TouchableOpacity>
               </View>
             : ''
