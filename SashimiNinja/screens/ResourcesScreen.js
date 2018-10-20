@@ -4,8 +4,10 @@ import {
   View, 
   Text, 
   TouchableOpacity,
+  Image,
   Linking,
-  StyleSheet } from 'react-native';
+  StyleSheet, 
+  Dimensions } from 'react-native';
 import Colors from '../constants/Colors';
 import LogoIcon from '../constants/LogoIcon';
 
@@ -23,6 +25,18 @@ export default class ResourcesScreen extends React.Component {
   render() {
     return (
       <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
+          <TouchableOpacity 
+            style={[styles.borderBottom, styles.centerColumn]}
+            onPress={() => this.props.navigation.navigate('Chart', { type: 'Hiragana' } )}
+          >
+            <Text style={styles.kanaLabel}>Hiragana</Text>
+          </TouchableOpacity>
+          <TouchableOpacity 
+            style={[styles.borderBottom, styles.centerColumn]}
+            onPress={() => this.props.navigation.navigate('Chart', { type: 'Katakana' } )}  
+          >
+            <Text style={styles.kanaLabel}>Katakana</Text>
+          </TouchableOpacity>
         <View style={styles.centerColumn}>
           <Text style={styles.boldText}>Getting Started with Japanese</Text>
           <TouchableOpacity 
@@ -46,6 +60,48 @@ export default class ResourcesScreen extends React.Component {
   }
 }
 
+export class KanaChart extends React.Component {
+  static navigationOptions = {
+    title: 'Kana Chart',
+    headerStyle: {
+      backgroundColor: Colors.navBkgd,
+    },
+  };
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      type: null,
+    }
+  }
+
+  componentDidMount = async () => {
+    await this.setState({ type: this.props.navigation.state.params.type});
+  }
+
+  render() {
+    return (
+      <ScrollView style={styles.container}>
+      {
+        this.state.type === 'Hiragana'
+        ? <Image 
+          style={{width: width, height: height}}
+          source={require('./../assets/hiragana_table.png')}
+          />
+        : <Image 
+          style={{width: width, height: height}}
+          source={require('./../assets/katakana_table.png')}
+          />
+      }
+      </ScrollView>
+    );
+  }
+}
+
+// get width to have answers stretch the width of the screen
+const width = Dimensions.get('window').width;
+const height = Dimensions.get('window').height;
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -64,9 +120,18 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
   },
+  borderBottom: {
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    width: width,
+  },
+  kanaLabel: {
+    fontSize: 34,
+    paddingVertical: 30,
+  },
   boldText: {
     fontWeight: 'bold',
-    paddingVertical: 5,
+    paddingTop: 20,
+    paddingBottom: 5,
   },
   linkText: {
     color: Colors.blue,
