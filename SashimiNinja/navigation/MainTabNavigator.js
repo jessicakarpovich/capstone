@@ -13,6 +13,7 @@ import SettingsScreen from '../screens/SettingsScreen';
 //import detail screens
 import { ReviewRowScreen, ReviewDetailScreen } from '../screens/ReviewScreen';
 import { TestDetailScreen, TestCompleteScreen } from '../screens/TestScreen';
+import { KanaChart } from '../screens/ResourcesScreen';
 
 import Colors from '../constants/Colors';
 
@@ -77,6 +78,7 @@ TestStack.navigationOptions = {
 
 const ResourcesStack = createStackNavigator({
   Resources: ResourcesScreen,
+  Chart: KanaChart,
 });
 
 ResourcesStack.navigationOptions = {
