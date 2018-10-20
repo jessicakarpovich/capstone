@@ -14,4 +14,5 @@ export default {
   backgroundMain: '#cbffdb',
   navBkgd: '#2dd3ac',
   altColor: '#671493',
+  blue: '#007AFF',
 };

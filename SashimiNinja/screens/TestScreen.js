@@ -606,8 +606,8 @@ export class TestCompleteScreen extends React.Component {
         <Text>{this.state.percent}%</Text>
         <TouchableOpacity 
           onPress={this.navigate}
-          style={styles.submitBtn}>
-          <Text style={styles.btnTextActive}>Close</Text>
+          style={styles.closeBtn}>
+          <Text style={styles.closeBtnText}>Close</Text>
         </TouchableOpacity>
       </View>
     );
@@ -697,5 +697,16 @@ const styles = StyleSheet.create({
   choicesText: {
     fontSize: 20,
     textAlign: 'center',
+  },
+  closeBtn: {
+    backgroundColor: Colors.blue,
+    padding: 2,
+    borderRadius: 6,
+    marginTop: 80,
+  },
+  closeBtnText: {
+    fontSize: 20,
+    color: '#fff',
+    padding: 4,
   },
 });
