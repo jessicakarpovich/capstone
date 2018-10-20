@@ -3,6 +3,7 @@ import {
   ScrollView, 
   View, 
   Text, 
+  TextInput,
   TouchableOpacity,
   Image,
   Linking,
@@ -29,19 +30,13 @@ export default class ResourcesScreen extends React.Component {
       kanjiArray: null,
       phrasesArray: null,
       translation: null,
+      searchInput: 'おはようございます',
     }
   }
 
   // get data from AsyncStorage 
   componentDidMount = async () => {
     await this.getData();
-    
-    let translated = false;
-    translated = await this.checkKanjiMatch('おはようございます', translated);
-    if (!translated)
-      translated = await this.checkPhrasesMatch('おはようございます', translated);
-
-    console.log(this.state.translation)
   }
 
   getData = async () => {
@@ -71,33 +66,78 @@ export default class ResourcesScreen extends React.Component {
     }
   }
 
+  translate = async () => {
+    let isTranslated = false;
+    // try translating it as a kanji
+    isTranslated = await this.checkKanjiMatch(this.state.searchInput, isTranslated);
+    // if no match, try phrases
+    if (!isTranslated)
+      isTranslated = await this.checkPhrasesMatch(this.state.searchInput, isTranslated);
+      if (isTranslated)
+        await this.setState({ isTranslated: true })
+    else 
+      await this.setState({ isTranslated: true })
+  }
+
+  // check if there is a kanji match
   checkKanjiMatch = async (value, translated) => {
     let match = this.state.kanjiArray.filter(o => o.kanji === value);
+    // if there is, set the state with the meaning
     if (match.length > 0) {
 
       await this.setState({ translation: match[0].meaning });
 
+      // return true to not evaluate phrases
       translated = true;
       return translated;
     }
   }
 
+  // check for phrases match
   checkPhrasesMatch = async (value, translated) => {
     let match = this.state.phrasesArray.filter(o => o.hiragana === value);
+    // if found, set state with meaning
     if (match.length > 0) {
 
       await this.setState({ translation: match[0].meaning });
 
+      // return true
       translated = true;
       return translated;
     }
+  }
+
+  // watch for user changes on textarea input and update state value
+  changeSearchInput = (e) => {
+    this.setState({searchInput: e});
   }
 
   render() {
     return (
       <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
-        <Text>{ this.state.translation ? this.state.translation : 'No Matches Found'}</Text>
-
+        <View>
+          <Text>Enter what you want to translate from Japanese to English.</Text>
+          <View>
+            <TextInput 
+              keyboardType = 'default'
+              value={`${this.state.searchInput}`}
+              onChangeText={this.changeSearchInput}
+              style={styles.textInput}
+            />
+          </View>
+        </View>
+        <TouchableOpacity 
+          onPress={this.translate}
+          style={styles.translateBtn}>
+          <Text style={styles.translateBtnText}>Translate</Text>
+        </TouchableOpacity>
+        <Text>{ 
+          !this.state.isTranslated 
+          ? ''
+          : this.state.isTranslated && this.state.translation
+            ? 'Translation: ' + this.state.translation
+            : 'No Matches Found'}</Text>
+        <View style={styles.borderBottom} />
         <TouchableOpacity 
           style={[styles.borderBottom, styles.centerColumn]}
           onPress={() => this.props.navigation.navigate('Chart', { type: 'Hiragana' } )}
@@ -196,6 +236,25 @@ const styles = StyleSheet.create({
   borderBottom: {
     borderBottomWidth: StyleSheet.hairlineWidth,
     width: width,
+  },
+  textInput: {
+    borderWidth: 1,
+    borderRadius: 6,
+    borderColor: "#000",
+    marginVertical: 20,
+    paddingVertical: 10,
+    paddingLeft: 5,
+  },
+  translateBtn: {
+    backgroundColor: Colors.blue,
+    padding: 2,
+    borderRadius: 6,
+    marginVertical: 10,
+  },
+  translateBtnText: {
+    fontSize: 20,
+    color: '#fff',
+    padding: 4,
   },
   kanaLabel: {
     fontSize: 34,
