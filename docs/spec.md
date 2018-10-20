@@ -17,13 +17,15 @@
 
 ## Feature Definitions
 
-* log in/oAuth/logout
+[Link to Features](https://github.com/jessicakarpovich/capstone/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Afeature)
+
+* log in/oAuth/logout - if time allows
 * Firebase connection
 * kanji, phrase of the day
-* 10 most recent test scores
+* 10 most recent test scores - if time allows
 * review kana by row, kanji be level
 * test - randomly generated questions from selected content
-* translator with Google Translate API
+* translator with using database content
 * kana charts
 * getting started guides
 
@@ -34,6 +36,7 @@ When the user first opens the app, they will see a log in screen with an option 
 Home
 
     - Recent Scores
+    - Kanji/Phrase of the day
 
 Review 
 
@@ -152,9 +155,6 @@ Test
             Congrats!
             __/__
             percent correct%
-            Hiragana __/__
-            Katakana __/__
-            Kanji __/__
 
 Resources
 
@@ -176,13 +176,13 @@ Recent Scores
 
 ### Browser Support
 
-This app will support portrait mode in iOS and Android. Because of the nature of the app, it will look and be most usable in portrait mode, so I will not be adding support for landscape mode.
+This app will support portrait mode in iOS (Android if time allows). Because of the nature of the app, it will look and be most usable in portrait mode, so I will not be adding support for landscape mode.
 
 ## Infrastructure
 
 ### Technical Requirements
 
-* Firebase: store users, user progress, and app content
+* Firebase: (store users, user progress,) and app content
 
 ### Programming Languages
 
@@ -190,7 +190,6 @@ This app will support portrait mode in iOS and Android. Because of the nature of
 
 ### Integrations
 
-* [Google Translate API](https://cloud.google.com/translate/docs/quickstart)
 * [Firebase Authentication](https://firebase.google.com/docs/auth/)
 
 ### Deployment Workflow

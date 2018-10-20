@@ -21,7 +21,9 @@
 
 ## MVP
 
-*Note:* Will be added later.
+[Link to Prototypes](https://xd.adobe.com/view/17077c53-806a-4b75-6f02-788c4c3d04ff-6136/)
+
+[Link to Video Presentation](https://youtu.be/xbptacfJnfI)
 
 ## Pivot
 
