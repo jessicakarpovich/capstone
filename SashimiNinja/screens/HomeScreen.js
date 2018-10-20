@@ -3,8 +3,6 @@ import { StyleSheet, Text, View, AsyncStorage } from 'react-native';
 
 import Colors from '../constants/Colors';
 import LogoIcon from '../constants/LogoIcon';
-import { MonoText } from '../components/StyledText';
-import { app } from 'firebase';
 
 /****** Display kanji and phrase of the day to the user *******/
 /****** Update the content each new day the user logs in *******/
