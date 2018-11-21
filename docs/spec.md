@@ -25,13 +25,11 @@
 * 10 most recent test scores - if time allows
 * review kana by row, kanji be level
 * test - randomly generated questions from selected content
-* translator with using database content
+* translation using Google API
 * kana charts
 * getting started guides
 
 ## Sitemap
-
-When the user first opens the app, they will see a log in screen with an option to skip it, after that they will always be taken to the app itself.
 
 Home
 
@@ -54,15 +52,16 @@ Review
 Test
     
     - Recent Scores
-    - Question with 4 possible answers
+    - Selection Screen for question content, number, and language
+        - Question with 4 possible answers
         - Score screen when done
 
 Resources
 
     - Recent Scores
+    - Search/Translate Box
     - Link to Hiragana Chart
     - Link to Katakana Chart
-    - Search/Translate Box
     - Links to Getting Started Guides
 
 Settings
@@ -82,7 +81,6 @@ Home
     
     - Recent Scores
 
-    User Name
     Kanji of the day
         Kanji
             Kunyomi
