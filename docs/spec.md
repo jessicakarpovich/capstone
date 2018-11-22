@@ -174,21 +174,38 @@ Recent Scores
 
 ### Browser Support
 
-This app will support portrait mode in iOS (Android if time allows). Because of the nature of the app, it will look and be most usable in portrait mode, so I will not be adding support for landscape mode.
+#### OS Support
+This app will support portrait mode in iOS (and Android if time allows). To make Android support easier, I will avoid using any platform specific React Native components. Ideally, I want the app to be open to iOS and Andriod users.
+
+#### Portrait/Landscape Mode Support
+Because of the nature of the app, content is best listed top to bottom. It will look and be most usable in portrait mode, so I will not be adding support for landscape mode.
+
+#### Screen Resolutions
+
+As my app focuses on displaying data vertically, key resolution is smallest acceptable width. For this, I'll be looking at phones, not tablets.
+
+- iPhone 7 - 750-pixels wide at 326 ppi
+- Galaxy S8 - 1440-pixels wide at 570 ppi
 
 ## Infrastructure
 
 ### Technical Requirements
 
-* Firebase: (store users, user progress,) and app content
+* Firebase: Store/authenticate users
+* Firestore: Store app content and user scores
 
 ### Programming Languages
+
+* [JavaScript](https://www.javascript.com/)
+
+#### Framework
 
 * [React Native](https://facebook.github.io/react-native/)
 
 ### Integrations
 
-* [Firebase Authentication](https://firebase.google.com/docs/auth/)
+* [Firebase/Firebase Authentication](https://firebase.google.com/docs/)
+* [Google Translate API](https://cloud.google.com/translate/docs/)
 
 ### Deployment Workflow
 
