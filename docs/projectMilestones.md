@@ -25,9 +25,11 @@
 
 [Link to Video Presentation](https://youtu.be/xbptacfJnfI)
 
+[Link to tagged MVP release](https://github.com/jessicakarpovich/capstone/commit/78faad2b29d0a7bd7f8d81f97f44f9225c75929c)
+
 ## Pivot
 
-*Note:* Will be added later.
+*Note:* Will be added as soon as the PR is approved.
 
 ## Alpha Release
 
