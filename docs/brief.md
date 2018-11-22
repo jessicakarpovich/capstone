@@ -13,9 +13,17 @@ Teenagers and young adults with an interest in Japanese culture often decide to 
 
 ## Audience
 
-Teenagers and young adults, primarily high school and college students, between the ages of 15 and 25 with interest in Japanese culture, want to study Japanese while skipping content that they already know. They have some knowledge of Japanese that they gained from playing games, watching anime, or reading manga. Their primary reason for wanting to learn the language is to play more games, and enjoy manga and anime without the need of translation. They are comfortable with tecnhology and may even know how to hack their way to play an old game that they like.
+Teenagers and young adults, primarily high school and college students, between the ages of 15 and 25 with interest in Japanese culture, want to study Japanese while skipping content that they already know. They have some knowledge of Japanese that they gained from playing games, watching anime, or reading manga. Their primary reason for wanting to learn the language is to play more games, and enjoy manga and anime without the need of translation. 
 
 As this is primarily a hobby, they tend to study in bursts whenever time allows.
+
+### Primary Audience
+
+They are comfortable with tecnhology and may even know how to hack their way to play an old game that they like. That said, they only choose ad-free apps that are available for free download.
+
+### Secondary Audience
+
+They are not as comfortable with technology and tend to get a little lost when first using an app. Any app they deem too complex is dropped.
 
 ## Problem
 
@@ -33,13 +41,23 @@ The other issue is that many apps dump a user into review mode with no explanati
 
 ## Solution
 
+### Competition
+
+[Real Kana](https://realkana.com/) offers lesson-free review for kana. However, it has ads and it forces the user to type their answer to each question. Although that forces the user to know the answer, on mobile, the experience is better with multiple choice.
+
+[Erin's Challenge](https://www.erin.ne.jp/en/) is a free app that has plenty of resources on Japanese, but the app's questions are primarily in romaji and it locks the user into lessons. 
+
+[Duolingo](https://www.duolingo.com/) is also available for free and covers vocabulary, grammar, and writing. However, it never gives a breakdown of the writing system and it glosses over many details of the language.
+
+### My Solution
+
 My solution is to create a free app (no ads) that will cover kana (Hiragana and Katakana), kanji, and simple phrases. It will have review, test, and resources sections. 
 
 In review, I will display kana by row and kanji by category. Each character will be listed with the readings and meanings (kanji only). This section will allow the user to review the content and will serve as a way for the user to quickly refresh their memory if they forget something.
 
 The test section will allow the user to select which kana rows and what kanji levels they want to be included in the questions. There will also be options to select the number of questions and what language the questions are displayed in. This way a beginner in Japanese will be able to start practicing with questions in English or romaji, while an intermediate user will be able to select Japanese to challenge themselves.
 
-The resources section will provide kana charts, a translator feature, and guides on getting started in Japanese. It will be aimed at giving an overview of the language, so that if the user has never formally studied Japanese, they will know what to expect.
+The resources section will provide kana charts, a translation feature, and guides on getting started in Japanese. It will be aimed at giving an overview of the language, so that if the user has never formally studied Japanese, they will know what to expect.
 
 ## Unique Value Proposition
 
@@ -55,4 +73,6 @@ Sashimi Ninja will be superior to all its competition because of the following k
 
 ## Pitch
 
-[YouTube Video Link](https://www.youtube.com/watch?v=-5tbYemfMSg)
+[Pitch YouTube Video Link](https://www.youtube.com/watch?v=-5tbYemfMSg)
+
+[Link to Video Presentation of MVP](https://youtu.be/xbptacfJnfI)
