@@ -13,7 +13,7 @@ Teenagers and young adults with an interest in Japanese culture often decide to 
 
 ## Audience
 
-Teenagers and young adults, between the ages of 15 and 25 with interest in Japanese culture, want to study Japanese while skipping content that they already know. They have some knowledge of Japanese that they gained from playing games, watching anime, or reading manga. Their primary reason for wanting to learn the language is to play more games, and enjoy manga and anime without the need of translation. 
+Teenagers and young adults, primarily high school and college students, between the ages of 15 and 25 with interest in Japanese culture, want to study Japanese while skipping content that they already know. They have some knowledge of Japanese that they gained from playing games, watching anime, or reading manga. Their primary reason for wanting to learn the language is to play more games, and enjoy manga and anime without the need of translation. They are comfortable with tecnhology and may even know how to hack their way to play an old game that they like.
 
 As this is primarily a hobby, they tend to study in bursts whenever time allows.
 
