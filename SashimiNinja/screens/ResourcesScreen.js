@@ -67,6 +67,7 @@ export default class ResourcesScreen extends React.Component {
   }
 
   translate = async () => {
+    this.setState({ translation: null })
     let isTranslated = false;
     // try translating it as a kanji
     isTranslated = await this.checkKanjiMatch(this.state.searchInput, isTranslated);
@@ -159,9 +160,12 @@ export default class ResourcesScreen extends React.Component {
             </View>
             : <Text
                 style={{
+                  paddingTop: 20,
+                  paddingBottom: 60,
+                  fontWeight: 'bold',
                   // fontFamily: 'Apple SD Gothic Neo'
                 }}
-              >'No Matches Found'
+              >No Matches Found
               </Text>
         }
         <View style={styles.borderBottom} />
