@@ -461,8 +461,6 @@ export class TestDetailScreen extends React.Component {
 
   // set diff instruct text based on lang value
   // display character or kanji, based on character values
-  ////// TO-DO: add lang check and display question/answers in lang opposite
-  // for now defaults to Japanese
   render() {
     return (
       <View style={styles.container}>
@@ -497,7 +495,9 @@ export class TestDetailScreen extends React.Component {
           }
           </Text>
           {
-            this.state.answers && this.state.currentCharacter
+            this.state.answers 
+            // removing this seems to solve no answer displayed bug
+            // && this.state.currentCharacter
             ? <View>
                 <TouchableOpacity style={styles.choices}
                   onPress={() => this.checkUserAnswer(0)}>
@@ -582,15 +582,13 @@ export class TestCompleteScreen extends React.Component {
       this.state = {
         correct: null,
         total: null,
-        percent: null,
       };
   }
 
-  componentDidMount = async () => {
+  componentDidMount = () => {
     // get # correct and total, calc percent and round
-    await this.setState({ correct: this.props.navigation.state.params.correct });
-    await this.setState({ total: this.props.navigation.state.params.total });
-    await this.setState({ percent: ((this.state.correct / this.state.total) * 100).toFixed(2) });
+    this.setState({ correct: this.props.navigation.state.params.correct });
+    this.setState({ total: this.props.navigation.state.params.total });
   }
 
   navigate = () => {
@@ -599,11 +597,13 @@ export class TestCompleteScreen extends React.Component {
   }
 
   render() {
+    const percent = ((this.state.correct / this.state.total) * 100).toFixed(2)
+    console.log(percent)
     return (
       <View style={styles.container}>
         <Text>Congrats!</Text>
         <Text>{this.state.correct} / {this.state.total}</Text>
-        <Text>{this.state.percent}%</Text>
+        <Text>{percent}%</Text>
         <TouchableOpacity 
           onPress={this.navigate}
           style={styles.closeBtn}>
