@@ -650,9 +650,18 @@ export class TestCompleteScreen extends React.Component {
 
     return (
       <View style={styles.container}>
-        <Text>Congrats!</Text>
-        <Text>{this.state.correct} / {this.state.total}</Text>
-        <Text>{percent}%</Text>
+        <Text style={styles.congratsMes} >Congrats!</Text>
+        <Text 
+          style={{
+            fontSize: 80
+          }}
+        >{this.state.correct} / {this.state.total}</Text>
+        <Text 
+          style={{ 
+            fontSize: 40,
+            paddingVertical: 10
+          }}
+        >{percent}%</Text>
         <TouchableOpacity 
           onPress={this.navigate}
           style={styles.closeBtn}>
@@ -734,7 +743,8 @@ const styles = StyleSheet.create({
     marginBottom: 76,
   },
   choices: {
-    width: width,
+    display: 'flex',
+    marginHorizontal: 20,
     paddingVertical: 10,
     borderBottomColor: Colors.tabIconDefault,
     borderBottomWidth: StyleSheet.hairlineWidth,
@@ -751,11 +761,18 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.blue,
     padding: 2,
     borderRadius: 6,
-    marginTop: 80,
+    marginTop: 120,
   },
   closeBtnText: {
     fontSize: 20,
     color: '#fff',
-    padding: 4,
+    paddingVertical: 4,
+    paddingHorizontal: 10,
+  },
+  congratsMes: {
+    fontSize: 40,
+    color: Colors.altColor,
+    paddingTop: 30,
+    paddingBottom: 10
   },
 });

@@ -278,6 +278,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   largeBtn: {
+    display: 'flex',
+    marginHorizontal: 20,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
@@ -289,6 +291,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   rowBtn: {
+    display: 'flex',
+    marginHorizontal: 20,
     height: 66,
     justifyContent: 'center',
     borderBottomWidth: StyleSheet.hairlineWidth,
