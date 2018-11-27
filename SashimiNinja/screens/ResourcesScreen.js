@@ -131,12 +131,39 @@ export default class ResourcesScreen extends React.Component {
           style={styles.translateBtn}>
           <Text style={styles.translateBtnText}>Translate</Text>
         </TouchableOpacity>
-        <Text>{ 
+        {
           !this.state.isTranslated 
-          ? ''
+          ? undefined
           : this.state.isTranslated && this.state.translation
-            ? 'Translation: ' + this.state.translation
-            : 'No Matches Found'}</Text>
+            ?<View 
+              style={{ 
+                display: 'flex', 
+                flexDirection: 'row',
+                paddingTop: 20,
+                paddingBottom: 60
+            }}>
+              <Text 
+                style={{
+                  fontWeight: 'bold',
+                  // fontFamily: 'Apple SD Gothic Neo'
+                }}
+              >
+                Translation: 
+              </Text>
+              <Text
+                style={{
+                  // fontFamily: 'Apple SD Gothic Neo'
+                }}
+              >{this.state.translation}
+              </Text>
+            </View>
+            : <Text
+                style={{
+                  // fontFamily: 'Apple SD Gothic Neo'
+                }}
+              >'No Matches Found'
+              </Text>
+        }
         <View style={styles.borderBottom} />
         <TouchableOpacity 
           style={[styles.borderBottom, styles.centerColumn]}
@@ -254,7 +281,10 @@ const styles = StyleSheet.create({
   translateBtnText: {
     fontSize: 20,
     color: '#fff',
-    padding: 4,
+    paddingVertical: 2,
+    paddingHorizontal: 20,
+    fontWeight: 'bold',
+    fontFamily: 'Apple SD Gothic Neo'
   },
   kanaLabel: {
     fontSize: 34,

@@ -188,8 +188,18 @@ export class ReviewDetailScreen extends React.Component {
       return (
         <View style={styles.container}>
           <View style={styles.rowCenter}>
-            <Text style={styles.regularText}>{this.state.type} </Text>
-            <Text style={styles.regularText}>{data.romaji}</Text>
+            <Text 
+              style={[
+                styles.regularText,
+                { fontFamily: 'Apple SD Gothic Neo' }
+              ]}
+            >{this.state.type} </Text>
+            <Text 
+              style={[
+                styles.regularText,
+                { fontFamily: 'Apple SD Gothic Neo' }
+              ]}
+            >{data.romaji}</Text>
           </View>
           <View style={styles.rowAround}>
             <Icon.Ionicons

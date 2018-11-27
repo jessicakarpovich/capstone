@@ -328,7 +328,15 @@ export default class TestScreen extends React.Component {
         <TouchableOpacity 
           onPress={this.validateInput}
           style={styles.submitBtn}>
-          <Text style={styles.btnTextActive}>Mission Start</Text>
+          <Text 
+            style={[
+              styles.btnTextActive, 
+              { 
+                paddingVertical: 2,
+                paddingHorizontal: 10
+              }
+            ]}
+          >Mission Start</Text>
         </TouchableOpacity>
       </ScrollView>
     );
@@ -514,7 +522,13 @@ export class TestDetailScreen extends React.Component {
     return (
       <View style={styles.container}>
         <View style={styles.centerColumn}>
-          <Text>Question {currentQuest+1} / {totalQuest}</Text>
+          <Text 
+            style={{
+              fontWeight: '600',
+              fontFamily: 'Apple SD Gothic Neo',
+              fontSize: 20
+            }}
+          >Question {currentQuest+1} / {totalQuest}</Text>
           <Text>
             {
               language == 'en'
@@ -720,11 +734,15 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: Colors.tabIconDefault,
     padding: 4,
+    fontWeight: 'bold',
+    fontFamily: 'Apple SD Gothic Neo'
   },
   btnTextActive: {
     fontSize: 20,
     color: '#000',
     padding: 4,
+    fontWeight: 'bold',
+    fontFamily: 'Apple SD Gothic Neo'
   },
   textInput: {
     borderWidth: 1,
@@ -766,8 +784,10 @@ const styles = StyleSheet.create({
   closeBtnText: {
     fontSize: 20,
     color: '#fff',
-    paddingVertical: 4,
-    paddingHorizontal: 10,
+    paddingVertical: 2,
+    paddingHorizontal: 50,
+    fontWeight: 'bold',
+    fontFamily: 'Apple SD Gothic Neo'
   },
   congratsMes: {
     fontSize: 40,
