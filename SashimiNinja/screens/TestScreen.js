@@ -175,7 +175,8 @@ export default class TestScreen extends React.Component {
     this.props.navigation.navigate('Detail', {
       content: contentArray, 
       lang: this.state.language, 
-      num: this.state.numOfQuest
+      num: this.state.numOfQuest,
+      type: this.state.content
     });
   }
 
@@ -355,6 +356,7 @@ export class TestDetailScreen extends React.Component {
       currentCharacter: null,
       answers: null,
       numCorrect: 0,
+      type: this.props.navigation.state.params.type
     };
   }
 
@@ -389,30 +391,51 @@ export class TestDetailScreen extends React.Component {
 
     const {
       contentArray,
-      currentCharacter
+      currentCharacter,
+      type
     } = this.state
 
     // grab the actual characters at the answer indecies
     // we need them to check for similar answer duplicates
     // e.g.: あ vs ア, both have the same romaji, eliminate
-    let char1 = contentArray[ans1]
-    let char2 = contentArray[ans2]
-    let char3 = contentArray[ans3]
+    let char1 = contentArray[ans1].romaji
+    let char2 = contentArray[ans2].romaji
+    let char3 = contentArray[ans3].romaji
 
-    console.log(char1)
-    console.log(char2)
-    console.log(char3)
-    console.log(contentArray[currentCharacter])
+    // type 0-2 is for Hiragana
+    const HAS_HIRAGANA = type[0] || type[1] || type[2]
+    // type 3-5 is for Katakana and 6 is for Kanji
+    const HAS_KATAKANA = type[3] || type[4] || type[5]
 
-    // make sure answers don't overlap
-    while (ans1 === ans2 || ans1 === ans3 || ans1 === currentCharacter) {
-      ans1 = this.generateRandomCharacter();
-    }
-    while (ans2 === ans1 || ans2 === ans3 || ans2 === currentCharacter) {
-      ans2 = this.generateRandomCharacter();
-    }
-    while (ans3 === ans1 || ans3 === ans2 || ans3 === currentCharacter) {
-      ans3 = this.generateRandomCharacter();
+    const CUR_ROMAJI = contentArray[currentCharacter].romaji
+
+    // if user is viewing both kana sets, check for overlapping romaji
+    if ( HAS_HIRAGANA && HAS_KATAKANA ) {
+        // make sure answers don't overlap
+        while ( char1 === CUR_ROMAJI || char1 === char2 || char1 === char3 ) {
+          ans1 = this.generateRandomCharacter()
+          char1 = contentArray[ans1].romaji
+        }
+        while ( char2 === CUR_ROMAJI || char2 === char1 || char2 === char3 ) {
+          ans2 = this.generateRandomCharacter()
+          char2 = contentArray[ans2].romaji
+        }
+        while ( char3 === CUR_ROMAJI || char3 === char1 || char3 === char2 ) {
+          ans3 = this.generateRandomCharacter()
+          char3 = contentArray[ans3].romaji
+        }
+    } else {
+
+      // make sure answers don't overlap
+      while (ans1 === ans2 || ans1 === ans3 || ans1 === currentCharacter) {
+        ans1 = this.generateRandomCharacter();
+      }
+      while (ans2 === ans1 || ans2 === ans3 || ans2 === currentCharacter) {
+        ans2 = this.generateRandomCharacter();
+      }
+      while (ans3 === ans1 || ans3 === ans2 || ans3 === currentCharacter) {
+        ans3 = this.generateRandomCharacter();
+      }
     }
 
     // array for answers
