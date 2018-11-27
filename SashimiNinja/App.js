@@ -1,7 +1,18 @@
 import React from 'react';
-import { Platform, StatusBar, StyleSheet, View, AsyncStorage } from 'react-native';
+import { 
+  Platform, 
+  StatusBar, 
+  StyleSheet, 
+  View, 
+  AsyncStorage 
+} from 'react-native';
 import AppNavigator from './navigation/AppNavigator';
-import { AppLoading, Asset, Font, Icon } from 'expo';
+import { 
+  AppLoading, 
+  Asset, 
+  Font, 
+  Icon 
+} from 'expo';
 // to access db
 import * as firebase from 'firebase';
 import 'firebase/firestore';
@@ -168,7 +179,9 @@ export default class App extends React.Component {
         ...Icon.Ionicons.font,
         // We include SpaceMono because we use it in HomeScreen.js. Feel free
         // to remove this if you are not using it in your app
-        'space-mono': require('./assets/fonts/SpaceMono-Regular.ttf'),
+        'Merriweather-Regular': require('./assets/fonts/Merriweather-Regular.ttf'),
+        'Merriweather-Bold': require('./assets/fonts/Merriweather-Bold.ttf'),
+        'Merriweather-Black': require('./assets/fonts/Merriweather-Black.ttf'),
       }),
     ]);
   };
