@@ -117,7 +117,12 @@ export default class ResourcesScreen extends React.Component {
     return (
       <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
         <View>
-          <Text>Enter what you want to translate from Japanese to English.</Text>
+          <Text
+            style={{
+              fontFamily: 'Merriweather-Regular',
+              textAlign: 'center'
+            }}
+          >Enter what you want to translate from Japanese to English.</Text>
           <View>
             <TextInput 
               keyboardType = 'default'
@@ -293,14 +298,16 @@ const styles = StyleSheet.create({
   kanaLabel: {
     fontSize: 34,
     paddingVertical: 30,
+    fontFamily: 'Merriweather-Regular'
   },
   boldText: {
-    fontWeight: 'bold',
     paddingTop: 20,
     paddingBottom: 5,
+    fontFamily: 'Merriweather-Black'
   },
   linkText: {
     color: Colors.blue,
     paddingVertical: 5,
+    fontFamily: 'Merriweather-Regular'
   },
 });
