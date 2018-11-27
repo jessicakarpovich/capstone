@@ -715,11 +715,12 @@ const styles = StyleSheet.create({
   },
   promptText: {
     color: Colors.altColor,
-    fontWeight: 'bold',
+    fontFamily: 'Merriweather-Black'
   },
   categoryText: {
     fontSize: 28,
     textAlign: 'center',
+    fontFamily: 'Merriweather-Regular'
   },
   categoryBtn: {
     marginHorizontal: 20,
@@ -774,6 +775,7 @@ const styles = StyleSheet.create({
   choicesText: {
     fontSize: 20,
     textAlign: 'center',
+    fontFamily: 'Apple SD Gothic Neo'
   },
   closeBtn: {
     backgroundColor: Colors.blue,
@@ -793,6 +795,7 @@ const styles = StyleSheet.create({
     fontSize: 40,
     color: Colors.altColor,
     paddingTop: 30,
-    paddingBottom: 10
+    paddingBottom: 10,
+    fontFamily: 'Merriweather-Bold'
   },
 });
