@@ -15,7 +15,6 @@ import LogoIcon from '../constants/LogoIcon';
 import { 
   PowerTranslator, 
   ProviderTypes, 
-  TranslatorConfiguration, 
   TranslatorFactory 
 } from 'react-native-power-translator';
 
@@ -34,8 +33,6 @@ export default class ResourcesScreen extends React.Component {
     super(props);
     this.state = {
       translator: null,
-      kanjiArray: null,
-      phrasesArray: null,
       translation: null,
       searchInput: 'おはようございます',
     }
@@ -43,83 +40,22 @@ export default class ResourcesScreen extends React.Component {
 
   // get data from AsyncStorage 
   componentDidMount = () => {
+    // set translate variable to state
     this.setState({ translator: TranslatorFactory.createTranslator() })
-
-    this.getData();
-  }
-
-  getData = async () => {
-    // create temp variable to store data into
-    let temp;
-
-    // try getting the kanji array from async storage
-    try {
-      temp = await AsyncStorage.getItem('kanji');
-      // if available, set to state
-      if (temp !== null) {
-        this.setState({kanjiArray: JSON.parse(temp)});
-      }
-    } catch (err) {
-      console.log("Error getting kanji array", err);
-    }
-
-    // try getting the phrases array
-    try {
-      temp = await AsyncStorage.getItem('phrases');
-      // if available, set to state
-      if (temp !== null) {
-        this.setState({phrasesArray: JSON.parse(temp)});
-      }
-    } catch (err) {
-      console.log("Error getting phrases array", err);
-    }
   }
 
   translate = async () => {
-    this.state.translator.translate('Engineering physics or engineering science').then(translated => {
-      //Do something with the translated text
-      console.log(translated)
-    });
+    // use Google Translate to translate seach query
+    this.state.translator.translate(this.state.searchInput)
+      .then(translated => {
 
-    this.setState({ translation: null })
-    let isTranslated = false;
-    // try translating it as a kanji
-    isTranslated = await this.checkKanjiMatch(this.state.searchInput, isTranslated);
-    // if no match, try phrases
-    if (!isTranslated)
-      isTranslated = await this.checkPhrasesMatch(this.state.searchInput, isTranslated);
-      if (isTranslated)
-        await this.setState({ isTranslated: true })
-    else 
-      await this.setState({ isTranslated: true })
-  }
+        this.setState({ translation: translated })
+        this.setState({ isTranslated: true })
+      })
+      .catch( err => {
+        console.log( err )
+      })
 
-  // check if there is a kanji match
-  checkKanjiMatch = async (value, translated) => {
-    let match = this.state.kanjiArray.filter(o => o.kanji === value);
-    // if there is, set the state with the meaning
-    if (match.length > 0) {
-
-      await this.setState({ translation: match[0].meaning });
-
-      // return true to not evaluate phrases
-      translated = true;
-      return translated;
-    }
-  }
-
-  // check for phrases match
-  checkPhrasesMatch = async (value, translated) => {
-    let match = this.state.phrasesArray.filter(o => o.hiragana === value);
-    // if found, set state with meaning
-    if (match.length > 0) {
-
-      await this.setState({ translation: match[0].meaning });
-
-      // return true
-      translated = true;
-      return translated;
-    }
   }
 
   // watch for user changes on textarea input and update state value

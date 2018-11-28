@@ -25,10 +25,8 @@ import {
   hDoc, kDoc, kanji_Doc
 } from 'react-native-dotenv';
 import { 
-  PowerTranslator, 
   ProviderTypes, 
   TranslatorConfiguration, 
-  TranslatorFactory 
 } from 'react-native-power-translator';
 
 export default class App extends React.Component {
@@ -57,13 +55,8 @@ export default class App extends React.Component {
   }
 
   componentDidMount() {
-    TranslatorConfiguration.setConfig(ProviderTypes.Google, Key, 'ja');
-
-    // const translator = TranslatorFactory.createTranslator();
-    // translator.translate('Engineering physics or engineering science').then(translated => {
-    //     //Do something with the translated text
-    //     console.log(translated)
-    // });
+    // set up config for translator
+    TranslatorConfiguration.setConfig(ProviderTypes.Google, Key, 'en');
 
     // init firebase, use env vars
     const fbConfig = {
