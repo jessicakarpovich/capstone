@@ -24,10 +24,6 @@ import {
   iosID, 
   hDoc, kDoc, kanji_Doc
 } from 'react-native-dotenv';
-import { 
-  ProviderTypes, 
-  TranslatorConfiguration, 
-} from 'react-native-power-translator';
 
 export default class App extends React.Component {
 
@@ -55,9 +51,6 @@ export default class App extends React.Component {
   }
 
   componentDidMount() {
-    // set up config for translator
-    TranslatorConfiguration.setConfig(ProviderTypes.Google, Key, 'en');
-
     // init firebase, use env vars
     const fbConfig = {
       apiKey: Key,

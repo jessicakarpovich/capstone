@@ -8,14 +8,18 @@ import {
   Image,
   Linking,
   StyleSheet, 
-  Dimensions,
-  AsyncStorage } from 'react-native';
+  Dimensions ,
+  Switch
+} from 'react-native';
 import Colors from '../constants/Colors';
 import LogoIcon from '../constants/LogoIcon';
+import {
+  Key, 
+} from 'react-native-dotenv';
 import { 
-  PowerTranslator, 
   ProviderTypes, 
-  TranslatorFactory 
+  TranslatorFactory,
+  TranslatorConfiguration
 } from 'react-native-power-translator';
 
 export default class ResourcesScreen extends React.Component {
@@ -34,19 +38,19 @@ export default class ResourcesScreen extends React.Component {
     this.state = {
       translator: null,
       translation: null,
+      isEng: true,
       searchInput: 'おはようございます',
     }
   }
 
-  // get data from AsyncStorage 
-  componentDidMount = () => {
-    // set translate variable to state
-    this.setState({ translator: TranslatorFactory.createTranslator() })
-  }
+  translate = () => {
+    // set up config for translator
+    TranslatorConfiguration.setConfig(ProviderTypes.Google, Key, 'en');
 
-  translate = async () => {
+    // set translate variable to state
+    const translator = TranslatorFactory.createTranslator() 
     // use Google Translate to translate seach query
-    this.state.translator.translate(this.state.searchInput)
+    translator.translate(this.state.searchInput)
       .then(translated => {
 
         this.setState({ translation: translated })
@@ -72,7 +76,20 @@ export default class ResourcesScreen extends React.Component {
               fontFamily: 'Merriweather-Regular',
               textAlign: 'center'
             }}
-          >Enter what you want to translate from Japanese to English.</Text>
+          >Enter what you want to translate to: </Text>
+          <View 
+            style={[
+              styles.row, 
+              styles.contentContainer,
+              { justifyContent: 'space-around' }
+            ]}>
+            <Text style={{ fontWeight: 'bold' }}>Japanese</Text>
+            <Switch 
+              onValueChange={ ( newValue ) => this.setState({ isEng: newValue })}
+              value={ this.state.isEng }
+            />
+            <Text style={{ fontWeight: 'bold' }}>English</Text>
+          </View>
           <View>
             <TextInput 
               keyboardType = 'default'
