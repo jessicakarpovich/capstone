@@ -31,18 +31,22 @@ export default class TestScreen extends React.Component {
   };
 
 
-  static navigationOptions = {
+  static navigationOptions = ({ navigation}) => ({
     title: 'Test',
     headerLeft: (
       <LogoIcon />
     ),
     headerRight: (
-      <HelpIcon />
+      <TouchableOpacity
+        onPress={() => navigation.navigate( 'Resources' )}
+      >
+        <HelpIcon />
+      </TouchableOpacity>
     ),
     headerStyle: {
       backgroundColor: Colors.navBkgd,
     },
-  };
+  });
 
   // watch for user changes on textarea input and update state value
   changeNumofQuest = (e) => {

@@ -22,7 +22,8 @@ import {
   databaseURL, 
   ID, 
   iosID, 
-  hDoc, kDoc, kanji_Doc} from 'react-native-dotenv';
+  hDoc, kDoc, kanji_Doc
+} from 'react-native-dotenv';
 
 export default class App extends React.Component {
 
