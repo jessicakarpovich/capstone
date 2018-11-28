@@ -12,6 +12,12 @@ import {
   AsyncStorage } from 'react-native';
 import Colors from '../constants/Colors';
 import LogoIcon from '../constants/LogoIcon';
+import { 
+  PowerTranslator, 
+  ProviderTypes, 
+  TranslatorConfiguration, 
+  TranslatorFactory 
+} from 'react-native-power-translator';
 
 export default class ResourcesScreen extends React.Component {
   static navigationOptions = {
@@ -27,6 +33,7 @@ export default class ResourcesScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      translator: null,
       kanjiArray: null,
       phrasesArray: null,
       translation: null,
@@ -35,8 +42,10 @@ export default class ResourcesScreen extends React.Component {
   }
 
   // get data from AsyncStorage 
-  componentDidMount = async () => {
-    await this.getData();
+  componentDidMount = () => {
+    this.setState({ translator: TranslatorFactory.createTranslator() })
+
+    this.getData();
   }
 
   getData = async () => {
@@ -67,6 +76,11 @@ export default class ResourcesScreen extends React.Component {
   }
 
   translate = async () => {
+    this.state.translator.translate('Engineering physics or engineering science').then(translated => {
+      //Do something with the translated text
+      console.log(translated)
+    });
+
     this.setState({ translation: null })
     let isTranslated = false;
     // try translating it as a kanji
