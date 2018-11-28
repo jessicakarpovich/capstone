@@ -44,11 +44,18 @@ export default class ResourcesScreen extends React.Component {
   }
 
   translate = () => {
-    // set up config for translator
-    TranslatorConfiguration.setConfig(ProviderTypes.Google, Key, 'en');
+    // select English or Japanese based on lang toggle
+    const lang = 
+      this.state.isEng
+      ? 'en'
+      : 'ja'
+
+    // set up config for translator using Google
+    TranslatorConfiguration.setConfig(ProviderTypes.Google, Key, lang);
 
     // set translate variable to state
     const translator = TranslatorFactory.createTranslator() 
+    
     // use Google Translate to translate seach query
     translator.translate(this.state.searchInput)
       .then(translated => {
@@ -87,6 +94,7 @@ export default class ResourcesScreen extends React.Component {
             <Switch 
               onValueChange={ ( newValue ) => this.setState({ isEng: newValue })}
               value={ this.state.isEng }
+              style={{ backgroundColor: Colors.tintColor, borderRadius: 17 }}
             />
             <Text style={{ fontWeight: 'bold' }}>English</Text>
           </View>
@@ -168,7 +176,12 @@ export default class ResourcesScreen extends React.Component {
           <TouchableOpacity 
             onPress={() => Linking.openURL('https://www.fluentin3months.com/easy-japanese/')}
           >
-            <Text style={styles.linkText}>Where to Start?</Text>
+            <Text 
+              style={[
+                styles.linkText,
+                { marginBottom: 20 }
+              ]}
+            >Where to Start?</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
