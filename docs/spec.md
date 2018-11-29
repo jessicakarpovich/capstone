@@ -17,23 +17,30 @@
 
 ## Feature Definitions
 
-* log in/oAuth/logout
+[Link to Features](https://github.com/jessicakarpovich/capstone/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Afeature)
+
+* log in/oAuth/logout - if time allows
 * Firebase connection
 * kanji, phrase of the day
-* 10 most recent test scores
+* 10 most recent test scores - if time allows
 * review kana by row, kanji be level
 * test - randomly generated questions from selected content
-* translator with Google Translate API
+* translation using Google API
 * kana charts
 * getting started guides
 
-## Sitemap
+### Scoring
 
-When the user first opens the app, they will see a log in screen with an option to skip it, after that they will always be taken to the app itself.
+The score screen will display the 10 most recent user test scores. It enables the user to track how they are doing on tests, when they have last completed a test, and whether or not they should review.
+
+If a user is logged in through Google, their scores will presist across devices. If a user is not logged in, their scores will be saved into AsyncStorage and will persist on restarting the app. This ensures user login is never a requirement! :)
+
+## Sitemap
 
 Home
 
     - Recent Scores
+    - Kanji/Phrase of the day
 
 Review 
 
@@ -51,15 +58,16 @@ Review
 Test
     
     - Recent Scores
-    - Question with 4 possible answers
+    - Selection Screen for question content, number, and language
+        - Question with 4 possible answers
         - Score screen when done
 
 Resources
 
     - Recent Scores
+    - Search/Translate Box
     - Link to Hiragana Chart
     - Link to Katakana Chart
-    - Search/Translate Box
     - Links to Getting Started Guides
 
 Settings
@@ -79,7 +87,6 @@ Home
     
     - Recent Scores
 
-    User Name
     Kanji of the day
         Kanji
             Kunyomi
@@ -152,17 +159,13 @@ Test
             Congrats!
             __/__
             percent correct%
-            Hiragana __/__
-            Katakana __/__
-            Kanji __/__
 
 Resources
 
     - Recent Scores
     - Hiragana Chart
     - Katakana Chart
-    - Search/Translate Box
-        Search
+    - Search/Translate
     - Getting Started Guides
 
 Settings
@@ -177,36 +180,43 @@ Recent Scores
 
 ### Browser Support
 
-The React version of the app will have JS and CSS support for at least the last two versions of popular browsers like Chrome, Firefox, and Safari with screen sizes of at least 320px wide. Few devices have a smaller width so I see no point in accomodating them. Besides that, mobile users will always have the option of using the React Native app instead. As for the browsers, most people use one of the three I mentioned above. If they don't, they most likely know some websites may be broken. Similarly, users know they should keep their software updated for security reasons. If they aren't aware or don't care to update, it's on them if something doesn't work as expected.
+#### OS Support
+This app will support portrait mode in iOS (and Android if time allows). To make Android support easier, I will avoid using any platform specific React Native components. Ideally, I want the app to be open to iOS and Andriod users.
 
-The React Native version of this app will support portrait mode in iOS and Android. Because of the nature of the app, it will look and be most usable in portrait mode, so I will not be adding support for landscape mode.
+#### Portrait/Landscape Mode Support
+Because of the nature of the app, content is best listed top to bottom. It will look and be most usable in portrait mode, so I will not be adding support for landscape mode.
+
+#### Screen Resolutions
+
+As my app focuses on displaying data vertically, key resolution is smallest acceptable width. For this, I'll be looking at phones, not tablets.
+
+- iPhone 7 - 750-pixels wide at 326 ppi
+- Galaxy S8 - 1440-pixels wide at 570 ppi
 
 ## Infrastructure
 
 ### Technical Requirements
 
-* Firebase: store users, user progress, and app content
-* Github Pages: deploy React app
-
+* Firebase: Store/authenticate users
+* Firestore: Store app content and user scores
 
 ### Programming Languages
 
-* [React](https://reactjs.org/)
+* [JavaScript](https://www.javascript.com/)
+
+#### Framework
+
 * [React Native](https://facebook.github.io/react-native/)
 
 ### Integrations
 
-* [Google Translate API](https://cloud.google.com/translate/docs/quickstart)
-* [Firebase Authentication](https://firebase.google.com/docs/auth/)
+* [Firebase/Firebase Authentication](https://firebase.google.com/docs/)
+* [Google Translate API](https://cloud.google.com/translate/docs/)
 
 ### Deployment Workflow
 
-After completing the intial setup with gh-pages as documented [here](https://github.com/gitname/react-gh-pages) I will simply run `npm run deploy` to deploy my React app with the new changes to GitHub pages.
-
-For the React Native app, I will use the steps outlined [here](https://www.christianengvall.se/react-native-build-for-ios-app-store/) and [here](https://codeburst.io/how-to-deploy-a-create-react-native-app-to-the-appstore-229a8fa36fb1) to deploy it. As I don't intend to get an Apple Developer account, I will only be able to locally test the iOS version of the app. After adding a new feature, I will build it and test it on my Android and iOS devices.
+I will be following the Github workflow for deployment. For new features, I will create a branch off of dev and work on it there. Once complete, I will merge it into dev. After I have completed the features for the release, I will create a pull request and merge into the release branch. I will also create a PR for merging the release into master and will request approval from at least one instructor before merging. Upon approval, I will merge my changes into dev and they will be live.
 
 ### Web Host
 
-* GitHub Pages (for React app)
-
-*Note:* Will provide link after testing.
+As my app is written in React Native and is meant for mobile devices, I will not be providing a live hosted version. However, anyone interested will be able to follow the setup instructions in the readme to run the app using Expo either on their phone, or through a simulator.
