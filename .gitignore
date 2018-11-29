@@ -1,5 +1,8 @@
 .DS_Store
 
+.expo/
+.vscode
+
 # Logs
 logs
 *.log
