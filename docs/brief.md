@@ -59,6 +59,16 @@ The test section will allow the user to select which kana rows and what kanji le
 
 The resources section will provide kana charts, a translation feature, and guides on getting started in Japanese. It will be aimed at giving an overview of the language, so that if the user has never formally studied Japanese, they will know what to expect.
 
+#### Address Primary Audience
+
+They only consider free apps with no ads and excess clutter so I will be making my app freely available and only adding elements that directly contribute to functionality. As they are tech savy individuals, I will be following standard design choices with primary navigation handled as tab navigation.
+
+#### Address Secondary Audience
+
+As they are not as comfortable with tech and may need an extra push to figure out how to use a new app, I have added a '?' icon link to every main page at the top that redirects to the resources screen (it can also be accessed through the tab navigation). This screen has the translator, kana charts, and links on getting started; all great resources on starting with Japanese and understanding the app's purpose.
+
+The translator feature uses the Google Translator API and I have added a toggle, which allows you to select what language to translate to: Japanese or English. The language of the search query is auto-detected. This means people can use the translator feature to translate from any language. It is especially useful when the user's primary language is other than English.
+
 ## Unique Value Proposition
 
 Sashimi Ninja will be superior to all its competition because of the following key reasons:
