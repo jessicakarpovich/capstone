@@ -29,6 +29,12 @@
 * kana charts
 * getting started guides
 
+### Scoring
+
+The score screen will display the 10 most recent user test scores. It enables the user to track how they are doing on tests, when they have last completed a test, and whether or not they should review.
+
+If a user is logged in through Google, their scores will presist across devices. If a user is not logged in, their scores will be saved into AsyncStorage and will persist on restarting the app. This ensures user login is never a requirement! :)
+
 ## Sitemap
 
 Home
