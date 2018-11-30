@@ -76,13 +76,24 @@ First of all, download the zip or clone a copy of the repo, either from the dev 
 
 On your local computer, unzip the folder and open up a terminal.
 
-Then cd into the project folder.
-```
-$ cd Downloads/capstone-dev/SashimiNinja/
-$ npm install
-$ expo start
-````
 [npm](https://www.npmjs.com/) install will get you the necessary packages and [expo start](#expo) will start the app, providing options on how to view it.
 
-However, to use the app you will need to create a .env file inside of the SashimiNinja folder. An example of what it should look like is given above at [React Native Dotenv](#react-native-dotenv)
+However, to use the app you will need to create a .env file inside of the **root folder** (capstone-dev). An example of what it should look like is given above at [React Native Dotenv](#react-native-dotenv)
 
+Then cd into the project folder.
+```
+$ cd Downloads/capstone-dev/
+$ npm install
+```
+
+The first time you install the packages using npm, you will need to edit a file to look for App.js in the SashimiNinja folder. To do so, open the file at `node_modules/expo/AppEntry.js`. 
+
+Change `import App from '../../App';` to `import App from '../../SashimiNinja/App';`
+
+Then run:
+
+```
+$ expo start
+````
+
+After initially adjusting the AppEntry.js file, it should remember your settings and you can run the app by using `expo start`.
