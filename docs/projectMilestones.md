@@ -29,7 +29,9 @@
 
 ## Pivot
 
-*Note:* Will be added as soon as the PR is approved.
+[Link to Pivot tag](https://github.com/jessicakarpovich/capstone/releases/tag/v1.0.0)
+
+[Link to commit tagged with v1.0.0 Pivot Release](https://github.com/jessicakarpovich/capstone/commit/b3a68a91f764bf21856b87afb2f3b0ca57006ff8)
 
 ## Alpha Release
 
