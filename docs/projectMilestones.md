@@ -35,6 +35,8 @@
 
 ## Alpha Release
 
+[Video Demo Link](https://youtu.be/3TtWPVdfJnE)
+
 *Note:* Will be added later.
 
 ## Beta Release
