@@ -652,10 +652,48 @@ export class TestCompleteScreen extends React.Component {
       };
   }
 
-  componentDidMount = () => {
+  componentDidMount() {
+    const {
+      correct,
+      total
+    } = this.props.navigation.state.params
+    // save the score
+    this.storeScore( correct, total )
+
     // get # correct and total, calc percent and round
-    this.setState({ correct: this.props.navigation.state.params.correct });
-    this.setState({ total: this.props.navigation.state.params.total });
+    this.setState({ correct: correct });
+    this.setState({ total: total });
+  }
+
+  storeScore = ( correct, total ) => {
+    AsyncStorage.getItem('scores')
+      .then((scores) => {
+        scores = JSON.parse(scores)
+
+        // check for valid data
+        if (!scores) {
+          // set date and correct out of total
+          const date = new Date()
+          const scores = [ 
+            {
+              score: `${correct}/${total}`, 
+              date: date
+            }
+          ] 
+          AsyncStorage.setItem('scores', JSON.stringify(scores))
+        } else if ( scores.length < 10) {
+          const date = new Date()
+
+          scores.push({
+            score: `${correct}/${total}`, 
+            date: date
+          })
+          console.log(scores)
+          AsyncStorage.setItem('scores', JSON.stringify(scores))
+        } else {
+          console.log(scores)
+        }
+      })
   }
 
   navigate = () => {
