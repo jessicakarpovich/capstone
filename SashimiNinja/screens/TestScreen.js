@@ -4,7 +4,6 @@ import {
   StyleSheet, 
   Text, 
   TextInput, 
-  Button, 
   TouchableOpacity, 
   ScrollView, 
   AsyncStorage, 
@@ -34,7 +33,11 @@ export default class TestScreen extends React.Component {
   static navigationOptions = ({ navigation}) => ({
     title: 'Test',
     headerLeft: (
-      <LogoIcon />
+      <TouchableOpacity
+        onPress={() => navigation.navigate( 'Scores' )}
+      >
+        <LogoIcon />
+      </TouchableOpacity>
     ),
     headerRight: (
       <TouchableOpacity
@@ -691,7 +694,6 @@ export class TestCompleteScreen extends React.Component {
             score: `${correct}/${total}`, 
             date: date
           })
-          console.log(scores)
           AsyncStorage.setItem('scores', JSON.stringify(scores))
           // if 10 are saved, remove the first one and add this one
         } else {
@@ -703,7 +705,6 @@ export class TestCompleteScreen extends React.Component {
             score: `${correct}/${total}`, 
             date: date
           })
-          console.log(scores)
           AsyncStorage.setItem('scores', JSON.stringify(scores))
         }
       })

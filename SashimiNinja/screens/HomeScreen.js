@@ -1,5 +1,11 @@
 import React from 'react';
-import { StyleSheet, Text, View, AsyncStorage } from 'react-native';
+import { 
+  StyleSheet, 
+  Text, 
+  View, 
+  TouchableOpacity,
+  AsyncStorage 
+} from 'react-native';
 
 import Colors from '../constants/Colors';
 import LogoIcon from '../constants/LogoIcon';
@@ -28,15 +34,21 @@ export default class HomeScreen extends React.Component {
   }
 
   // set logo icon and remove header bottom border
-  static navigationOptions = {
-    title: 'Home',
-    headerLeft: (
-      <LogoIcon />
-    ),
-    headerStyle: {
-      backgroundColor: Colors.backgroundMain,
-      borderBottomWidth: 0,
-    },
+  static navigationOptions = ({ navigation }) => {
+    return {
+      title: 'Home',
+      headerLeft: (
+        <TouchableOpacity
+          onPress={() => navigation.navigate( 'Scores' )}
+        >
+          <LogoIcon />
+        </TouchableOpacity>
+      ),
+      headerStyle: {
+        backgroundColor: Colors.backgroundMain,
+        borderBottomWidth: 0,
+      },
+    }
   };
 
   // get data from AsyncStorage 

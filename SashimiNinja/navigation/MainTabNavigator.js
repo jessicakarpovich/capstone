@@ -9,6 +9,7 @@ import ReviewScreen from '../screens/ReviewScreen';
 import TestScreen from '../screens/TestScreen';
 import ResourcesScreen from '../screens/ResourcesScreen';
 import SettingsScreen from '../screens/SettingsScreen';
+import ScoresScreen from '../screens/ScoresScreen'
 
 //import detail screens
 import { ReviewRowScreen, ReviewDetailScreen } from '../screens/ReviewScreen';
@@ -19,6 +20,7 @@ import Colors from '../constants/Colors';
 
 const HomeStack = createStackNavigator({
   Home: HomeScreen,
+  Scores: ScoresScreen
 });
 
 HomeStack.navigationOptions = {
@@ -40,6 +42,7 @@ const ReviewStack = createStackNavigator({
   Review: ReviewScreen,
   Row: ReviewRowScreen,
   Detail: ReviewDetailScreen,
+  Scores: ScoresScreen
 },
 {
   initialRouteName: 'Review',
@@ -60,6 +63,7 @@ const TestStack = createStackNavigator({
   Test: TestScreen,
   Detail: TestDetailScreen,
   Complete: TestCompleteScreen,
+  Scores: ScoresScreen
 },
 {
     initialRouteName: 'Test',
@@ -79,6 +83,7 @@ TestStack.navigationOptions = {
 const ResourcesStack = createStackNavigator({
   Resources: ResourcesScreen,
   Chart: KanaChart,
+  Scores: ScoresScreen
 });
 
 ResourcesStack.navigationOptions = {
@@ -94,6 +99,7 @@ ResourcesStack.navigationOptions = {
 
 const SettingsStack = createStackNavigator({
   Settings: SettingsScreen,
+  Scores: ScoresScreen
 });
 
 SettingsStack.navigationOptions = {

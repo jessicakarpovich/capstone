@@ -23,14 +23,20 @@ import {
 } from 'react-native-power-translator';
 
 export default class ResourcesScreen extends React.Component {
-  static navigationOptions = {
-    title: 'Resources',
-    headerLeft: (
-      <LogoIcon />
-    ),
-    headerStyle: {
-      backgroundColor: Colors.navBkgd,
-    },
+  static navigationOptions = ({ navigation }) => {
+    return {
+      title: 'Resources',
+      headerLeft: (
+        <TouchableOpacity
+          onPress={() => navigation.navigate( 'Scores' )}
+        >
+          <LogoIcon />
+        </TouchableOpacity>
+      ),
+      headerStyle: {
+        backgroundColor: Colors.navBkgd,
+      },
+    }
   };
 
   constructor(props) {

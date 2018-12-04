@@ -8,22 +8,15 @@ import Colors from '../constants/Colors';
 import LogoIcon from '../constants/LogoIcon';
 import HelpIcon from '../constants/HelpIcon';
 
-export default class SettingsScreen extends React.Component {
+export default class ScoresScreen extends React.Component {
   static navigationOptions = ({ navigation}) => ({
-    title: 'Settings',
+    title: 'Scores',
     headerLeft: (
       <TouchableOpacity
-        onPress={() => navigation.navigate( 'Scores' )}
-      >
-        <LogoIcon />
-      </TouchableOpacity>
-    ),
-    headerRight: (
-      <TouchableOpacity
-        onPress={() => navigation.navigate( 'Resources' )}
-      >
-        <HelpIcon />
-      </TouchableOpacity>
+          onPress={() => navigation.goBack()}
+        >
+          <LogoIcon />
+        </TouchableOpacity>
     ),
     headerStyle: {
       backgroundColor: Colors.navBkgd,
@@ -33,7 +26,7 @@ export default class SettingsScreen extends React.Component {
   render() {
     return (
       <View>
-        <Text>Hellp Settings</Text>
+        <Text>Recent Scores</Text>
       </View>
     );
   }
