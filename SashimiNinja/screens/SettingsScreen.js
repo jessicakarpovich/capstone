@@ -12,7 +12,11 @@ export default class SettingsScreen extends React.Component {
   static navigationOptions = ({ navigation}) => ({
     title: 'Settings',
     headerLeft: (
-      <LogoIcon />
+      <TouchableOpacity
+        onPress={() => navigation.navigate( 'Scores' )}
+      >
+        <LogoIcon />
+      </TouchableOpacity>
     ),
     headerRight: (
       <TouchableOpacity

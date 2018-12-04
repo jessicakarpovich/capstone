@@ -1,6 +1,12 @@
 import React from 'react';
-import { View, ScrollView, Text, TouchableOpacity, StyleSheet, AsyncStorage } from 'react-native';
-import { createStackNavigator } from 'react-navigation';
+import { 
+  View, 
+  ScrollView, 
+  Text, 
+  TouchableOpacity, 
+  StyleSheet, 
+  AsyncStorage 
+} from 'react-native';
 import Colors from '../constants/Colors';
 import KanaLabels from '../constants/KanaLabels';
 import LogoIcon from '../constants/LogoIcon';
@@ -20,7 +26,11 @@ export default class ReviewScreen extends React.Component {
     return {
       title: 'Review',
       headerLeft: (
-        <LogoIcon />
+        <TouchableOpacity
+          onPress={() => navigation.navigate( 'Scores' )}
+        >
+          <LogoIcon />
+        </TouchableOpacity>
       ),
       headerRight: (
         <TouchableOpacity
