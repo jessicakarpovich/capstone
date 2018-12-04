@@ -680,7 +680,10 @@ export class TestCompleteScreen extends React.Component {
               date: date
             }
           ] 
+          // store the new array
           AsyncStorage.setItem('scores', JSON.stringify(scores))
+
+          // if less than 10 scores saves, add this one to the end
         } else if ( scores.length < 10) {
           const date = new Date()
 
@@ -690,8 +693,18 @@ export class TestCompleteScreen extends React.Component {
           })
           console.log(scores)
           AsyncStorage.setItem('scores', JSON.stringify(scores))
+          // if 10 are saved, remove the first one and add this one
         } else {
+          // remove the first entry, it's the oldest
+          scores.shift()
+          const date = new Date()
+
+          scores.push({
+            score: `${correct}/${total}`, 
+            date: date
+          })
           console.log(scores)
+          AsyncStorage.setItem('scores', JSON.stringify(scores))
         }
       })
   }
