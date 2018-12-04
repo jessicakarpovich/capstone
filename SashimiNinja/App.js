@@ -8,8 +8,7 @@ import {
 } from 'react-native';
 import AppNavigator from './navigation/AppNavigator';
 import { 
-  AppLoading, 
-  Asset, 
+  AppLoading,
   Font, 
   Icon 
 } from 'expo';
@@ -19,9 +18,7 @@ import 'firebase/firestore';
 import {
   Key, 
   Domain, 
-  databaseURL, 
   ID, 
-  iosID, 
   hDoc, kDoc, kanji_Doc
 } from 'react-native-dotenv';
 
