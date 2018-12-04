@@ -60,7 +60,6 @@ export default class ScoresScreen extends React.Component {
   _keyExtractor = ( item, index ) => item.date
 
   _renderItem = ({ item, index }) => {
-    console.log(index)
     // split fraction
     const fraction = item.score.split('/')
     const num = parseFloat(fraction[0])
