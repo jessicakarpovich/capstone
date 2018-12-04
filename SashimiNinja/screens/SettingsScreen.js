@@ -1,19 +1,15 @@
 import React from 'react'
 import { 
   Text, 
-  View, 
   TouchableOpacity,
-  StyleSheet
+  StyleSheet,
+  AsyncStorage
 } from 'react-native'
 import * as firebase from 'firebase'
 import Colors from '../constants/Colors'
 import LogoIcon from '../constants/LogoIcon'
 import HelpIcon from '../constants/HelpIcon'
 import {
-  Key, 
-  Domain, 
-  databaseURL, 
-  ID, 
   iosID, 
 } from 'react-native-dotenv';
 
@@ -50,8 +46,11 @@ export default class SettingsScreen extends React.Component {
     // watch for user auth changes, either null or obj
     this.authSubscription = firebase.auth().onAuthStateChanged((user) => {
       if (user != null) {
-        console.log("Success");
+        console.log(user);
         this.setState({ signedIn: true })
+        AsyncStorage.setItem('user', JSON.stringify(user))
+      } else {
+        AsyncStorage.setItem('user', false)
       }
     })
   }
@@ -98,7 +97,7 @@ export default class SettingsScreen extends React.Component {
       // An error happened.
       console.log("Error in signing out");
     });
-}
+  }
 
   render() {
     const {

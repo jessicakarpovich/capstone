@@ -55,6 +55,7 @@ export default class ScoresScreen extends React.Component {
     } catch (err) {
       console.log("Error getting recent scores", err);
     }
+    // load from db too
   }
 
   _keyExtractor = ( item, index ) => item.date

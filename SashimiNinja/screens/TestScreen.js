@@ -652,6 +652,7 @@ export class TestCompleteScreen extends React.Component {
       this.state = {
         correct: null,
         total: null,
+        user: false,
       };
   }
 
@@ -660,6 +661,8 @@ export class TestCompleteScreen extends React.Component {
       correct,
       total
     } = this.props.navigation.state.params
+    // load user if logged in
+    this.loadUser()
     // save the score
     this.storeScore( correct, total )
 
@@ -668,7 +671,23 @@ export class TestCompleteScreen extends React.Component {
     this.setState({ total: total });
   }
 
+  loadUser = () => {
+
+    AsyncStorage.getItem('user')
+    // load user, parse data, store if valid
+    .then((user) => {
+      user = JSON.parse(user)
+
+      if ( user )
+        this.setState({ user: user })
+    })
+  }
+
   storeScore = ( correct, total ) => {
+    const {
+      user
+    } = this.state
+
     AsyncStorage.getItem('scores')
       .then((scores) => {
         scores = JSON.parse(scores)
@@ -677,14 +696,15 @@ export class TestCompleteScreen extends React.Component {
         if (!scores) {
           // set date and correct out of total
           const date = new Date()
-          const scores = [ 
+          const newScores = [ 
             {
               score: `${correct}/${total}`, 
               date: date
             }
           ] 
           // store the new array
-          AsyncStorage.setItem('scores', JSON.stringify(scores))
+          AsyncStorage.setItem('scores', JSON.stringify(newScores))
+          this.storeHighScores( user, newScores )
 
           // if less than 10 scores saves, add this one to the end
         } else if ( scores.length < 10) {
@@ -695,6 +715,7 @@ export class TestCompleteScreen extends React.Component {
             date: date
           })
           AsyncStorage.setItem('scores', JSON.stringify(scores))
+          this.storeHighScores( user, scores )
           // if 10 are saved, remove the first one and add this one
         } else {
           // remove the first entry, it's the oldest
@@ -706,8 +727,22 @@ export class TestCompleteScreen extends React.Component {
             date: date
           })
           AsyncStorage.setItem('scores', JSON.stringify(scores))
+          this.storeHighScores( user, scores )
         }
       })
+  }
+
+  // plug in with scores
+  storeHighScores = (user, scores) => {
+    if ( user ) {
+      firebase.database().ref('users/' + user.uid).set({
+        highscores: scores
+      });
+    }
+    // TO-DO: figure out how to write to db user data
+    console.log(firebase)
+    console.log(this.props)
+    // const userDoc = db.doc(`users/${user.uid}` )
   }
 
   navigate = () => {
