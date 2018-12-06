@@ -46,11 +46,10 @@ export default class SettingsScreen extends React.Component {
     // watch for user auth changes, either null or obj
     this.authSubscription = firebase.auth().onAuthStateChanged((user) => {
       if (user != null) {
-        console.log(user);
         this.setState({ signedIn: true })
         AsyncStorage.setItem('user', JSON.stringify(user))
       } else {
-        AsyncStorage.setItem('user', false)
+        AsyncStorage.setItem('user', JSON.stringify(false))
       }
     })
   }
@@ -89,12 +88,13 @@ export default class SettingsScreen extends React.Component {
 
   // test later
   signOut() {
-    firebase.auth().signOut().then(function() {
+    firebase.auth().signOut().then(() => {
       // Sign-out successful.
       console.log("Logged OUT");
       this.setState({ signedIn: false })
     }).catch(function(error) {
       // An error happened.
+      console.log(error)
       console.log("Error in signing out");
     });
   }

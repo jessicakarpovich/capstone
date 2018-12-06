@@ -11,7 +11,16 @@ import {
 import Colors from '../constants/Colors';
 import LogoIcon from '../constants/LogoIcon';
 import HelpIcon from '../constants/HelpIcon';
-import { StackActions, NavigationActions } from 'react-navigation';
+import { 
+  StackActions, 
+  NavigationActions 
+} from 'react-navigation';
+import * as firebase from 'firebase';
+import {
+  Key, 
+  Domain, 
+  ID, 
+} from 'react-native-dotenv';
 
 export default class TestScreen extends React.Component {
   // num ofquest is # of questions user requested, default 15
@@ -653,6 +662,7 @@ export class TestCompleteScreen extends React.Component {
         correct: null,
         total: null,
         user: false,
+        db: false,
       };
   }
 
@@ -662,31 +672,34 @@ export class TestCompleteScreen extends React.Component {
       total
     } = this.props.navigation.state.params
     // load user if logged in
-    this.loadUser()
+    this.loadUser( correct, total )
     // save the score
-    this.storeScore( correct, total )
+    // this.storeScore( correct, total )
 
     // get # correct and total, calc percent and round
     this.setState({ correct: correct });
     this.setState({ total: total });
   }
 
-  loadUser = () => {
+  loadUser = ( correct, total ) => {
 
     AsyncStorage.getItem('user')
     // load user, parse data, store if valid
     .then((user) => {
       user = JSON.parse(user)
 
-      if ( user )
-        this.setState({ user: user })
+      if ( user ) {
+        // save the score
+        this.setState({ user: user }, this.storeScore( correct, total, user ))
+
+      } else {
+        // save the score
+        this.storeScore( correct, total )
+      }
     })
   }
 
-  storeScore = ( correct, total ) => {
-    const {
-      user
-    } = this.state
+  storeScore = ( correct, total, user = false ) => {
 
     AsyncStorage.getItem('scores')
       .then((scores) => {
@@ -709,40 +722,63 @@ export class TestCompleteScreen extends React.Component {
           // if less than 10 scores saves, add this one to the end
         } else if ( scores.length < 10) {
           const date = new Date()
+          const newScores = scores
 
-          scores.push({
+          newScores.push({
             score: `${correct}/${total}`, 
             date: date
           })
-          AsyncStorage.setItem('scores', JSON.stringify(scores))
-          this.storeHighScores( user, scores )
+          AsyncStorage.setItem('scores', JSON.stringify(newScores))
+          this.storeHighScores( user, newScores )
           // if 10 are saved, remove the first one and add this one
         } else {
           // remove the first entry, it's the oldest
           scores.shift()
           const date = new Date()
+          const newScores = scores
 
-          scores.push({
+          newScores.push({
             score: `${correct}/${total}`, 
             date: date
           })
-          AsyncStorage.setItem('scores', JSON.stringify(scores))
-          this.storeHighScores( user, scores )
+          AsyncStorage.setItem('scores', JSON.stringify(newScores))
+          this.storeHighScores( user, newScores )
         }
       })
   }
 
   // plug in with scores
   storeHighScores = (user, scores) => {
+    const db = firebase.firestore();
+
+    // Disable deprecated features
+    db.settings({
+      timestampsInSnapshots: true
+    });
+
     if ( user ) {
-      firebase.database().ref('users/' + user.uid).set({
-        highscores: scores
-      });
+      const userRef = db.collection('users').doc(user.uid)
+      userRef.get().then((doc) => {
+        // check for data, if exists, continue
+        if (doc.exists) {
+        } else {
+          // doc.data() will be undefined in this case
+          console.log("No such document!");
+        }// catch errors
+      }).catch((error) => {
+          console.log("Error getting document:", error);
+      })
+
+      userRef.set({
+        array: scores
+      })
+      .then(() => {
+        console.log('success')
+      })
+      .catch((err) => {
+        console.log(err)
+      })
     }
-    // TO-DO: figure out how to write to db user data
-    console.log(firebase)
-    console.log(this.props)
-    // const userDoc = db.doc(`users/${user.uid}` )
   }
 
   navigate = () => {

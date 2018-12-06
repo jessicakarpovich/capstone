@@ -19,6 +19,7 @@ import {
   Key, 
   Domain, 
   ID, 
+  databaseURL,
   hDoc, kDoc, kanji_Doc
 } from 'react-native-dotenv';
 
@@ -52,7 +53,8 @@ export default class App extends React.Component {
     const fbConfig = {
       apiKey: Key,
       authDomain: Domain,
-      projectId: ID
+      projectId: ID,
+      databaseURL: databaseURL
     };
 
     // Initialize Cloud Firestore through Firebase
