@@ -92,6 +92,11 @@ export default class SettingsScreen extends React.Component {
       // Sign-out successful.
       console.log("Logged OUT");
       this.setState({ signedIn: false })
+
+      AsyncStorage.setItem('user', JSON.stringify({}))
+      // clear scores
+      AsyncStorage.setItem('scores', JSON.stringify({}))
+
     }).catch(function(error) {
       // An error happened.
       console.log(error)

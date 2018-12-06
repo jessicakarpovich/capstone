@@ -107,7 +107,7 @@ export default class HomeScreen extends React.Component {
   }
 
   // calc kanji/phrase to display using date and current date
-  calcKanjiPhrase = () => {
+  calcKanjiPhrase = async () => {
     // get current date
     let temp = new Date();
     let now = temp.getDay();
@@ -156,8 +156,8 @@ export default class HomeScreen extends React.Component {
       pIndex = index % pLength;
     }
     // set kanji and phrase index
-    this.setState({kIndex: kanjiIndex});
-    this.setState({pIndex: pIndex});
+    await this.setState({kIndex: kanjiIndex});
+    await this.setState({pIndex: pIndex});
 
     // set loaded to true once done
     this.setState({loaded: true});
