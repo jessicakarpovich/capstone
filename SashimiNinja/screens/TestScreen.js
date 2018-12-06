@@ -692,6 +692,13 @@ export class TestCompleteScreen extends React.Component {
         // save the score
         this.setState({ user: user }, this.storeScore( correct, total, user ))
 
+        const isDBNewer = this.compareScoreData( user )
+        if ( isDBNewer ) {
+          // leaving code snippet for later revisit
+          // would allow comparison of offline vs online data
+          // to use most recent data
+          // for now ignore and remove
+        }
       } else {
         // save the score
         this.storeScore( correct, total )
@@ -747,8 +754,7 @@ export class TestCompleteScreen extends React.Component {
       })
   }
 
-  // plug in with scores
-  storeHighScores = (user, scores) => {
+  compareScoreData = (user) => {
     const db = firebase.firestore();
 
     // Disable deprecated features
@@ -761,6 +767,16 @@ export class TestCompleteScreen extends React.Component {
       userRef.get().then((doc) => {
         // check for data, if exists, continue
         if (doc.exists) {
+          const dbScores = doc.data().array
+          const dbLength = dbScores.length
+
+          if (dbLength > scores.length
+            || 
+            ( dbLength === scores.length
+              && dbScores[dbLength-1].date > scores[dbLength-1].date) ) {
+                return true
+              }
+
         } else {
           // doc.data() will be undefined in this case
           console.log("No such document!");
@@ -768,7 +784,22 @@ export class TestCompleteScreen extends React.Component {
       }).catch((error) => {
           console.log("Error getting document:", error);
       })
+    }
+  }
 
+  // plug in with scores
+  storeHighScores = (user, scores) => {
+    const db = firebase.firestore();
+
+    // Disable deprecated features
+    db.settings({
+      timestampsInSnapshots: true
+    });
+
+    if ( user ) {
+      const userRef = db.collection('users').doc(user.uid)
+
+      // set new scores
       userRef.set({
         array: scores
       })
