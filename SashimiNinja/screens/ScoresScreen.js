@@ -57,17 +57,12 @@ export default class ScoresScreen extends React.Component {
       user = JSON.parse(user)
 
       if ( user ) {
-        // save the score
-        // this.setState({ user: user }, () => {
-        //   const scores = 
-        // this.loadAppScores()
-        console.log(this.state.scores)
-        // const dbData = 
-        this.compareScoreData( user, this.state.scores )
-        // console.log(dbData)
-        // if db data is newer, load it instead
-        // if ( dbData && dbData.isNewer )
-        //   this.setState({ scores: dbData })
+        // sometimes, scores is an empty object
+        // for comparison to work, send an empty array instead
+        if ( !Array.isArray(this.state.scores) )
+          this.compareScoreData( user, [] )
+        else 
+          this.compareScoreData( user, this.state.scores )
 
       } else {
         // save the score
@@ -76,6 +71,7 @@ export default class ScoresScreen extends React.Component {
     })
   }
 
+  // load scores from AsyncStorage
   loadAppScores = async () => {
     try {
       temp = await AsyncStorage.getItem('scores');
@@ -96,11 +92,12 @@ export default class ScoresScreen extends React.Component {
       timestampsInSnapshots: true
     });
 
+    // see if user is logged in
     if ( user ) {
       const userRef = db.collection('users').doc(user.uid)
       userRef.get().then((doc) => {
         
-        // check for data, if exists, continue
+        // check for score data, if exists, continue
         if (doc.exists) {
           const dbScores = doc.data().array
           const dbLength = dbScores.length
@@ -110,22 +107,15 @@ export default class ScoresScreen extends React.Component {
             || 
             ( dbLength === scores.length
               && dbScores[dbLength-1].date > scores[dbLength-1].date) ) {
-                // return { isNewer: true, scores: dbScores }
                 this.setState({ scores: dbScores })
               }
-          // otherwise return false to load app data
-          else {
-            // return { isNewer: false }
-          }
 
         } else {
           // doc.data() will be undefined in this case
           console.log("No such document!");
-          // return { isNewer: false }
         }// catch errors
       }).catch((error) => {
           console.log("Error getting document:", error);
-          // return { isNewer: false }
       })
     } else {
       return { isNewer: false }
@@ -148,15 +138,14 @@ export default class ScoresScreen extends React.Component {
     // round percent
     const percent = ( ( num / denom) * 100 ).toFixed( 2 )
 
+    // if timestamp, convert to ISOString to work with the rest of the logic
+    // for some reason, the last value saved to Firestore is stored as Timestamp obj
     if (typeof(item.date) == 'object') {
-      // console.log(item.date)
       item.date = item.date.toDate().toISOString()
-      console.log(item.date)
     }
 
     // get day and time
     day = item.date.split('T')
-    console.log(day)
     time = day ? day[1].split('.') : false
 
     return(
@@ -191,8 +180,7 @@ export default class ScoresScreen extends React.Component {
       ? 'No scores yet, complete a test for your score to appear here'
       : false
 
-    const reversedScores = scores.reverse()
-    console.log(this.state.scores)
+    const reversedScores = scores.length > 0 ? scores.reverse() : scores
     return (
       <View>
         {
