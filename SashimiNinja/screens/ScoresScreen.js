@@ -10,12 +10,15 @@ import {
 import Colors from '../constants/Colors';
 import LogoIcon from '../constants/LogoIcon';
 import HelpIcon from '../constants/HelpIcon';
+import * as firebase from 'firebase';
 
 export default class ScoresScreen extends React.Component {
 
   constructor( props ) {
     super( props )
     this.state = {
+      dbScores: [],
+      appScores: [],
       scores: []
     }
   }
@@ -42,10 +45,34 @@ export default class ScoresScreen extends React.Component {
   });
 
   componentDidMount() {
-    this.loadScores()
+    this.loadAppScores()
+    this.loadUser()
   }
 
-  loadScores = async () => {
+  loadUser = () => {
+
+    AsyncStorage.getItem('user')
+    // load user, parse data, store if valid
+    .then((user) => {
+      user = JSON.parse(user)
+
+      if ( user ) {
+        // sometimes, scores is an empty object
+        // for comparison to work, send an empty array instead
+        if ( !Array.isArray(this.state.scores) )
+          this.compareScoreData( user, [] )
+        else 
+          this.compareScoreData( user, this.state.scores )
+
+      } else {
+        // save the score
+        this.loadAppScores()
+      }
+    })
+  }
+
+  // load scores from AsyncStorage
+  loadAppScores = async () => {
     try {
       temp = await AsyncStorage.getItem('scores');
       // if available, set to state
@@ -57,7 +84,51 @@ export default class ScoresScreen extends React.Component {
     }
   }
 
-  _keyExtractor = ( item, index ) => item.date
+  compareScoreData = (user, scores) => {
+    const db = firebase.firestore();
+
+    // Disable deprecated features
+    db.settings({
+      timestampsInSnapshots: true
+    });
+
+    // see if user is logged in
+    if ( user ) {
+      const userRef = db.collection('users').doc(user.uid)
+      userRef.get().then((doc) => {
+        
+        // check for score data, if exists, continue
+        if (doc.exists) {
+          const dbScores = doc.data().array
+          const dbLength = dbScores.length
+
+          // if db array is longer or has a newer date, load db data
+          if (dbLength > scores.length
+            || 
+            ( dbLength === scores.length
+              && dbScores[dbLength-1].date > scores[dbLength-1].date) ) {
+                this.setState({ scores: dbScores })
+              }
+
+        } else {
+          // doc.data() will be undefined in this case
+          console.log("No such document!");
+        }// catch errors
+      }).catch((error) => {
+          console.log("Error getting document:", error);
+      })
+    } else {
+      return { isNewer: false }
+    }
+  }
+
+  _keyExtractor = ( item, index ) => {
+    if (typeof(item.date) !== 'object') {
+      return item.date
+    } else {
+      return item.date.toDate().toISOString()
+    }
+  }
 
   _renderItem = ({ item, index }) => {
     // split fraction
@@ -67,9 +138,15 @@ export default class ScoresScreen extends React.Component {
     // round percent
     const percent = ( ( num / denom) * 100 ).toFixed( 2 )
 
+    // if timestamp, convert to ISOString to work with the rest of the logic
+    // for some reason, the last value saved to Firestore is stored as Timestamp obj
+    if (typeof(item.date) == 'object') {
+      item.date = item.date.toDate().toISOString()
+    }
+
     // get day and time
-    const day = item.date.split('T')
-    const time = day[1].split('.')
+    day = item.date.split('T')
+    time = day ? day[1].split('.') : false
 
     return(
       <View style={styles.row}>
@@ -83,6 +160,7 @@ export default class ScoresScreen extends React.Component {
           <Text style={{
             fontFamily: 'Merriweather-Regular'
           }}>{time[0]}</Text>
+          {/* <Text>{item.date}</Text> */}
         </View>
         <Text style={{
           fontFamily: 'Apple SD Gothic Neo',
@@ -102,13 +180,12 @@ export default class ScoresScreen extends React.Component {
       ? 'No scores yet, complete a test for your score to appear here'
       : false
 
-    const reversedScores = scores.reverse()
-
+    const reversedScores = scores.length > 0 ? scores.reverse() : scores
     return (
       <View>
         {
           mes
-          ? <Text>{mes}</Text>
+          ? <Text style={styles.text}>{mes}</Text>
           : <FlatList
               data={reversedScores}
               keyExtractor={this._keyExtractor}
@@ -121,13 +198,6 @@ export default class ScoresScreen extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingTop: 15,
-    backgroundColor: '#fff',
-    flexDirection: 'column',
-    alignItems: 'center',
-  },
   row: {
     flexDirection: 'row',
     paddingVertical: 20,
@@ -135,4 +205,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     backgroundColor: Colors.backgroundMain
   },
+  text: {
+    textAlign: 'center',
+    fontFamily: 'Merriweather-Bold',
+    fontSize: 20
+  }
 })
