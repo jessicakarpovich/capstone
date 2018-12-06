@@ -185,7 +185,7 @@ export default class ScoresScreen extends React.Component {
       <View>
         {
           mes
-          ? <Text>{mes}</Text>
+          ? <Text style={styles.text}>{mes}</Text>
           : <FlatList
               data={reversedScores}
               keyExtractor={this._keyExtractor}
@@ -205,4 +205,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     backgroundColor: Colors.backgroundMain
   },
+  text: {
+    textAlign: 'center',
+    fontFamily: 'Merriweather-Bold',
+    fontSize: 20
+  }
 })
