@@ -4,7 +4,8 @@ import {
   Text, 
   View, 
   TouchableOpacity,
-  AsyncStorage 
+  AsyncStorage,
+  ActivityIndicator
 } from 'react-native';
 
 import Colors from '../constants/Colors';
@@ -52,7 +53,7 @@ export default class HomeScreen extends React.Component {
   };
 
   // get data from AsyncStorage 
-  async componentDidMount() {
+  componentDidMount = async () => {
     await this.getData();
     this.calcKanjiPhrase();
   }
@@ -107,7 +108,7 @@ export default class HomeScreen extends React.Component {
   }
 
   // calc kanji/phrase to display using date and current date
-  calcKanjiPhrase = () => {
+  calcKanjiPhrase = async () => {
     // get current date
     let temp = new Date();
     let now = temp.getDay();
@@ -156,19 +157,29 @@ export default class HomeScreen extends React.Component {
       pIndex = index % pLength;
     }
     // set kanji and phrase index
-    this.setState({kIndex: kanjiIndex});
-    this.setState({pIndex: pIndex});
+    await this.setState({kIndex: kanjiIndex});
+    await this.setState({pIndex: pIndex});
 
     // set loaded to true once done
     this.setState({loaded: true});
   }
 
   render() {
+    const {
+      loaded,
+      kanjiArray,
+      kIndex,
+      phrasesArray,
+      pIndex
+    } = this.state
+
     // check that everything is loaded to avoid undefined
     // when trying to access kanji at kIndex in array
-    if (!this.state.loaded) {
+    if (!loaded || kanjiArray === null) {
+      // set timeout for data to refresh
+      setTimeout( this.calcKanjiPhrase, 5000)
       return (
-        <Text>Hello</Text>
+        <ActivityIndicator size='large' />
       );
     }
 
@@ -176,31 +187,31 @@ export default class HomeScreen extends React.Component {
       <View style={styles.container}>
         <View style={styles.contentCont}>
           <Text style={styles.title}>Kanji of the Day</Text>
-          <Text style={styles.character}>{this.state.kanjiArray[this.state.kIndex].kanji}</Text>
+          <Text style={styles.character}>{kanjiArray[kIndex].kanji}</Text>
           <View style={styles.rowCenter}>
             <Text style={styles.boldLabelText}>Kunyomi: </Text>
-            <Text style={styles.labelText}>{ this.state.kanjiArray[this.state.kIndex].kunyomi }</Text>
+            <Text style={styles.labelText}>{kanjiArray[kIndex].kunyomi }</Text>
           </View>
           <View style={styles.rowCenter}>
             <Text style={styles.boldLabelText}>Onyomi: </Text>
-            <Text style={styles.labelText}>{ this.state.kanjiArray[this.state.kIndex].onyomi }</Text>
+            <Text style={styles.labelText}>{kanjiArray[kIndex].onyomi }</Text>
           </View>
           <View style={styles.rowCenter}>
             <Text style={styles.boldLabelText}>Meaning: </Text>
-            <Text style={styles.labelText}>{ this.state.kanjiArray[this.state.kIndex].meaning }</Text>
+            <Text style={styles.labelText}>{kanjiArray[kIndex].meaning }</Text>
           </View>
         </View>
 
         <View style={styles.contentCont}>
           <Text style={styles.title}>Phrase of the Day</Text>
-          <Text style={styles.phrase}>{ this.state.phrasesArray[this.state.pIndex].hiragana }</Text>
+          <Text style={styles.phrase}>{phrasesArray[pIndex].hiragana }</Text>
           <View style={styles.rowCenter}>
             <Text style={styles.boldLabelText}>Romaji: </Text>
-            <Text style={styles.labelText}>{ this.state.phrasesArray[this.state.pIndex].romaji }</Text>
+            <Text style={styles.labelText}>{phrasesArray[pIndex].romaji }</Text>
           </View>
           <View style={styles.rowCenter}>
             <Text style={styles.boldLabelText}>Meaning: </Text>
-            <Text style={styles.labelText}>{ this.state.phrasesArray[this.state.pIndex].meaning }</Text>
+            <Text style={styles.labelText}>{phrasesArray[pIndex].meaning }</Text>
           </View>
         </View>
       </View>
