@@ -212,15 +212,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   title: {
-    fontWeight: 'bold',
     fontSize: 34,
+    fontFamily: 'Merriweather-Black'
   },
   boldLabelText: {
-    fontWeight: 'bold',
     fontSize: 17,
+    fontFamily: 'Merriweather-Black'
   },
   labelText: {
     fontSize: 17,
+    fontFamily: 'Merriweather-Regular'
   },
   character: {
     fontSize: 180,

@@ -31,18 +31,22 @@ export default class TestScreen extends React.Component {
   };
 
 
-  static navigationOptions = {
+  static navigationOptions = ({ navigation}) => ({
     title: 'Test',
     headerLeft: (
       <LogoIcon />
     ),
     headerRight: (
-      <HelpIcon />
+      <TouchableOpacity
+        onPress={() => navigation.navigate( 'Resources' )}
+      >
+        <HelpIcon />
+      </TouchableOpacity>
     ),
     headerStyle: {
       backgroundColor: Colors.navBkgd,
     },
-  };
+  });
 
   // watch for user changes on textarea input and update state value
   changeNumofQuest = (e) => {
@@ -175,7 +179,8 @@ export default class TestScreen extends React.Component {
     this.props.navigation.navigate('Detail', {
       content: contentArray, 
       lang: this.state.language, 
-      num: this.state.numOfQuest
+      num: this.state.numOfQuest,
+      type: this.state.content
     });
   }
 
@@ -327,7 +332,15 @@ export default class TestScreen extends React.Component {
         <TouchableOpacity 
           onPress={this.validateInput}
           style={styles.submitBtn}>
-          <Text style={styles.btnTextActive}>Mission Start</Text>
+          <Text 
+            style={[
+              styles.btnTextActive, 
+              { 
+                paddingVertical: 2,
+                paddingHorizontal: 10
+              }
+            ]}
+          >Mission Start</Text>
         </TouchableOpacity>
       </ScrollView>
     );
@@ -355,6 +368,7 @@ export class TestDetailScreen extends React.Component {
       currentCharacter: null,
       answers: null,
       numCorrect: 0,
+      type: this.props.navigation.state.params.type
     };
   }
 
@@ -387,19 +401,57 @@ export class TestDetailScreen extends React.Component {
     let ans2 = this.generateRandomCharacter();
     let ans3 = this.generateRandomCharacter();
 
-    // make sure answers don't overlap
-    while (ans1 === ans2 || ans1 === ans3 || this.state.contentArray[ans1] === this.state.currentCharacter) {
-      ans1 = this.generateRandomCharacter();
-    }
-    while (ans2 === ans1 || ans2 === ans3 || this.state.contentArray[ans2] === this.state.currentCharacter) {
-      ans2 = this.generateRandomCharacter();
-    }
-    while (ans3 === ans1 || ans3 === ans2 || this.state.contentArray[ans3] === this.state.currentCharacter) {
-      ans3 = this.generateRandomCharacter();
+    const {
+      contentArray,
+      currentCharacter,
+      type
+    } = this.state
+
+    // grab the actual characters at the answer indecies
+    // we need them to check for similar answer duplicates
+    // e.g.: あ vs ア, both have the same romaji, eliminate
+    let char1 = contentArray[ans1].romaji
+    let char2 = contentArray[ans2].romaji
+    let char3 = contentArray[ans3].romaji
+
+    // type 0-2 is for Hiragana
+    const HAS_HIRAGANA = type[0] || type[1] || type[2]
+    // type 3-5 is for Katakana and 6 is for Kanji
+    const HAS_KATAKANA = type[3] || type[4] || type[5]
+
+    const CUR_ROMAJI = contentArray[currentCharacter].romaji
+
+    // if user is viewing both kana sets, check for overlapping romaji
+    if ( HAS_HIRAGANA && HAS_KATAKANA ) {
+        // make sure answers don't overlap
+        while ( char1 === CUR_ROMAJI || char1 === char2 || char1 === char3 ) {
+          ans1 = this.generateRandomCharacter()
+          char1 = contentArray[ans1].romaji
+        }
+        while ( char2 === CUR_ROMAJI || char2 === char1 || char2 === char3 ) {
+          ans2 = this.generateRandomCharacter()
+          char2 = contentArray[ans2].romaji
+        }
+        while ( char3 === CUR_ROMAJI || char3 === char1 || char3 === char2 ) {
+          ans3 = this.generateRandomCharacter()
+          char3 = contentArray[ans3].romaji
+        }
+    } else {
+
+      // make sure answers don't overlap
+      while (ans1 === ans2 || ans1 === ans3 || ans1 === currentCharacter) {
+        ans1 = this.generateRandomCharacter();
+      }
+      while (ans2 === ans1 || ans2 === ans3 || ans2 === currentCharacter) {
+        ans2 = this.generateRandomCharacter();
+      }
+      while (ans3 === ans1 || ans3 === ans2 || ans3 === currentCharacter) {
+        ans3 = this.generateRandomCharacter();
+      }
     }
 
     // array for answers
-    let ansArray = [ans1, ans2, ans3, this.state.currentCharacter];
+    let ansArray = [ans1, ans2, ans3, currentCharacter];
     // create array with 4 indexes
     let indexArray = [0, 1, 2, 3];
     // create an array for scrambled answers
@@ -421,7 +473,7 @@ export class TestDetailScreen extends React.Component {
 
   // check user answer against current character
   checkUserAnswer = async (ans) => {
-    let cur = this.state.currentQuest+1;
+    let cur = this.state.currentQuest + 1;
 
     if (cur < this.state.totalQuest) {
       // if this is not the last question, and the answer is correct
@@ -461,56 +513,71 @@ export class TestDetailScreen extends React.Component {
 
   // set diff instruct text based on lang value
   // display character or kanji, based on character values
-  ////// TO-DO: add lang check and display question/answers in lang opposite
-  // for now defaults to Japanese
   render() {
+    const {
+      currentQuest,
+      totalQuest,
+      language,
+      contentArray,
+      currentCharacter,
+      answers,
+    } = this.state
+
     return (
       <View style={styles.container}>
         <View style={styles.centerColumn}>
-          <Text>Question {this.state.currentQuest+1} / {this.state.totalQuest}</Text>
+          <Text 
+            style={{
+              fontWeight: '600',
+              fontFamily: 'Apple SD Gothic Neo',
+              fontSize: 20
+            }}
+          >Question {currentQuest+1} / {totalQuest}</Text>
           <Text>
             {
-              this.state.language == 'en'
+              language == 'en'
               ? 'Select the corresponding character'
               : 'Select the matching romaji/meaning'
             }
           </Text>
           <Text style={styles.character}>
-          { this.state.language == 'en'
-            ? (this.state.contentArray.length > 0 && this.state.contentArray[this.state.currentCharacter]
-              ? this.state.contentArray[this.state.currentCharacter].character
-                ? this.state.contentArray[this.state.currentCharacter].romaji
-                : this.state.contentArray[this.state.currentCharacter].kanji
-                ? this.state.contentArray[this.state.currentCharacter].meaning
+          { language == 'en'
+            ? (contentArray.length > 0 && contentArray[currentCharacter]
+              ? contentArray[currentCharacter].character
+                ? contentArray[currentCharacter].romaji
+                : contentArray[currentCharacter].kanji
+                ? contentArray[currentCharacter].meaning
                   : ''
               : ''
 
             )
-            : (this.state.contentArray.length > 0 && this.state.contentArray[this.state.currentCharacter]
-              ? this.state.contentArray[this.state.currentCharacter].character
-                ? this.state.contentArray[this.state.currentCharacter].character
-                : this.state.contentArray[this.state.currentCharacter].kanji
-                ? this.state.contentArray[this.state.currentCharacter].kanji
+            : (contentArray.length > 0 && contentArray[currentCharacter]
+              ? contentArray[currentCharacter].character
+                ? contentArray[currentCharacter].character
+                : contentArray[currentCharacter].kanji
+                ? contentArray[currentCharacter].kanji
                   : ''
               : ''
             )
           }
           </Text>
           {
-            this.state.answers && this.state.currentCharacter
+            answers 
+            // removing this seems to solve no answer displayed bug
+            // && this.state.currentCharacter
             ? <View>
                 <TouchableOpacity style={styles.choices}
                   onPress={() => this.checkUserAnswer(0)}>
                   <Text style={styles.choicesText}>
                   {
-                    this.state.language == 'en'
-                    ? (this.state.contentArray[this.state.answers[0]].romaji
-                      ? this.state.contentArray[this.state.answers[0]].character
-                      : this.state.contentArray[this.state.answers[0]].kanji
+                    language == 'en'
+                    ? (contentArray[answers[0]].romaji
+                      ? contentArray[answers[0]].character
+                      : contentArray[answers[0]].kanji
                     )
-                    : (this.state.contentArray[this.state.answers[0]].romaji
-                      ? this.state.contentArray[this.state.answers[0]].romaji
-                      : this.state.contentArray[this.state.answers[0]].meaning
+                    : (contentArray[answers[0]].romaji
+                      ? contentArray[answers[0]].romaji
+                      : contentArray[answers[0]].meaning
                     )
                   }</Text>
                 </TouchableOpacity>
@@ -518,14 +585,14 @@ export class TestDetailScreen extends React.Component {
                   onPress={() => this.checkUserAnswer(1)}>
                   <Text style={styles.choicesText}>
                   {
-                    this.state.language == 'en'
-                    ? (this.state.contentArray[this.state.answers[1]].romaji
-                      ? this.state.contentArray[this.state.answers[1]].character
-                      : this.state.contentArray[this.state.answers[1]].kanji
+                    language == 'en'
+                    ? (contentArray[answers[1]].romaji
+                      ? contentArray[answers[1]].character
+                      : contentArray[answers[1]].kanji
                     )
-                    : (this.state.contentArray[this.state.answers[1]].romaji
-                      ? this.state.contentArray[this.state.answers[1]].romaji
-                      : this.state.contentArray[this.state.answers[1]].meaning
+                    : (contentArray[answers[1]].romaji
+                      ? contentArray[answers[1]].romaji
+                      : contentArray[answers[1]].meaning
                     )
                   }</Text>
                 </TouchableOpacity>
@@ -533,14 +600,14 @@ export class TestDetailScreen extends React.Component {
                   onPress={() => this.checkUserAnswer(2)}>
                   <Text style={styles.choicesText}>
                   {
-                    this.state.language == 'en'
-                    ? (this.state.contentArray[this.state.answers[2]].romaji
-                      ? this.state.contentArray[this.state.answers[2]].character
-                      : this.state.contentArray[this.state.answers[2]].kanji
+                    language == 'en'
+                    ? (contentArray[answers[2]].romaji
+                      ? contentArray[answers[2]].character
+                      : contentArray[answers[2]].kanji
                     )
-                    : (this.state.contentArray[this.state.answers[2]].romaji
-                      ? this.state.contentArray[this.state.answers[2]].romaji
-                      : this.state.contentArray[this.state.answers[2]].meaning
+                    : (contentArray[answers[2]].romaji
+                      ? contentArray[answers[2]].romaji
+                      : contentArray[answers[2]].meaning
                     )
                   }</Text>
                 </TouchableOpacity>
@@ -548,14 +615,14 @@ export class TestDetailScreen extends React.Component {
                   onPress={() => this.checkUserAnswer(3)}>
                   <Text style={styles.choicesText}>
                   {
-                    this.state.language == 'en'
-                    ? (this.state.contentArray[this.state.answers[3]].romaji
-                      ? this.state.contentArray[this.state.answers[3]].character
-                      : this.state.contentArray[this.state.answers[3]].kanji
+                    language == 'en'
+                    ? (contentArray[answers[3]].romaji
+                      ? contentArray[answers[3]].character
+                      : contentArray[answers[3]].kanji
                     )
-                    : (this.state.contentArray[this.state.answers[3]].romaji
-                      ? this.state.contentArray[this.state.answers[3]].romaji
-                      : this.state.contentArray[this.state.answers[3]].meaning
+                    : (contentArray[answers[3]].romaji
+                      ? contentArray[answers[3]].romaji
+                      : contentArray[answers[3]].meaning
                     )
                   }</Text>
                 </TouchableOpacity>
@@ -582,15 +649,13 @@ export class TestCompleteScreen extends React.Component {
       this.state = {
         correct: null,
         total: null,
-        percent: null,
       };
   }
 
-  componentDidMount = async () => {
+  componentDidMount = () => {
     // get # correct and total, calc percent and round
-    await this.setState({ correct: this.props.navigation.state.params.correct });
-    await this.setState({ total: this.props.navigation.state.params.total });
-    await this.setState({ percent: ((this.state.correct / this.state.total) * 100).toFixed(2) });
+    this.setState({ correct: this.props.navigation.state.params.correct });
+    this.setState({ total: this.props.navigation.state.params.total });
   }
 
   navigate = () => {
@@ -599,11 +664,22 @@ export class TestCompleteScreen extends React.Component {
   }
 
   render() {
+    const percent = ((this.state.correct / this.state.total) * 100).toFixed(2)
+
     return (
       <View style={styles.container}>
-        <Text>Congrats!</Text>
-        <Text>{this.state.correct} / {this.state.total}</Text>
-        <Text>{this.state.percent}%</Text>
+        <Text style={styles.congratsMes} >Congrats!</Text>
+        <Text 
+          style={{
+            fontSize: 80
+          }}
+        >{this.state.correct} / {this.state.total}</Text>
+        <Text 
+          style={{ 
+            fontSize: 40,
+            paddingVertical: 10
+          }}
+        >{percent}%</Text>
         <TouchableOpacity 
           onPress={this.navigate}
           style={styles.closeBtn}>
@@ -643,11 +719,12 @@ const styles = StyleSheet.create({
   },
   promptText: {
     color: Colors.altColor,
-    fontWeight: 'bold',
+    fontFamily: 'Merriweather-Black'
   },
   categoryText: {
     fontSize: 28,
     textAlign: 'center',
+    fontFamily: 'Merriweather-Regular'
   },
   categoryBtn: {
     marginHorizontal: 20,
@@ -662,11 +739,15 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: Colors.tabIconDefault,
     padding: 4,
+    fontWeight: 'bold',
+    fontFamily: 'Apple SD Gothic Neo'
   },
   btnTextActive: {
     fontSize: 20,
     color: '#000',
     padding: 4,
+    fontWeight: 'bold',
+    fontFamily: 'Apple SD Gothic Neo'
   },
   textInput: {
     borderWidth: 1,
@@ -685,7 +766,8 @@ const styles = StyleSheet.create({
     marginBottom: 76,
   },
   choices: {
-    width: width,
+    display: 'flex',
+    marginHorizontal: 20,
     paddingVertical: 10,
     borderBottomColor: Colors.tabIconDefault,
     borderBottomWidth: StyleSheet.hairlineWidth,
@@ -697,16 +779,27 @@ const styles = StyleSheet.create({
   choicesText: {
     fontSize: 20,
     textAlign: 'center',
+    fontFamily: 'Apple SD Gothic Neo'
   },
   closeBtn: {
     backgroundColor: Colors.blue,
     padding: 2,
     borderRadius: 6,
-    marginTop: 80,
+    marginTop: 120,
   },
   closeBtnText: {
     fontSize: 20,
     color: '#fff',
-    padding: 4,
+    paddingVertical: 2,
+    paddingHorizontal: 50,
+    fontWeight: 'bold',
+    fontFamily: 'Apple SD Gothic Neo'
+  },
+  congratsMes: {
+    fontSize: 40,
+    color: Colors.altColor,
+    paddingTop: 30,
+    paddingBottom: 10,
+    fontFamily: 'Merriweather-Bold'
   },
 });

@@ -12,17 +12,27 @@ import { Icon } from 'expo';
 /*****  each option presents rows of where to start                     ******/
 /*****  upon selecting a row, you get details of one character at a time ******/
 export default class ReviewScreen extends React.Component {
-  static navigationOptions = {
-    title: 'Review',
-    headerLeft: (
-      <LogoIcon />
-    ),
-    headerRight: (
-      <HelpIcon />
-    ),
-    headerStyle: {
-      backgroundColor: Colors.navBkgd,
-    },
+  constructor( props ) {
+    super( props )
+  }
+
+  static navigationOptions = ({ navigation }) => {
+    return {
+      title: 'Review',
+      headerLeft: (
+        <LogoIcon />
+      ),
+      headerRight: (
+        <TouchableOpacity
+          onPress={() => navigation.navigate( 'Resources' )}
+        >
+          <HelpIcon />
+        </TouchableOpacity>
+      ),
+      headerStyle: {
+        backgroundColor: Colors.navBkgd,
+      },
+    }
   };
 
   // pass character type to row screen
@@ -68,7 +78,11 @@ export class ReviewRowScreen extends React.Component {
   static navigationOptions = ({ navigation}) => ({
     title: 'Review - ' + navigation.state.params.type,
     headerRight: (
-      <HelpIcon />
+      <TouchableOpacity
+        onPress={() => navigation.navigate( 'Resources' )}
+      >
+        <HelpIcon />
+      </TouchableOpacity>
     ),
     headerStyle: {
       backgroundColor: Colors.navBkgd,
@@ -155,7 +169,11 @@ export class ReviewDetailScreen extends React.Component {
   static navigationOptions = ({ navigation}) => ({
     title: 'Review - ' + navigation.state.params.type,
     headerRight: (
-      <HelpIcon />
+      <TouchableOpacity
+        onPress={() => navigation.navigate( 'Resources' )}
+      >
+        <HelpIcon />
+      </TouchableOpacity>
     ),
     headerStyle: {
       backgroundColor: Colors.navBkgd,
@@ -188,8 +206,18 @@ export class ReviewDetailScreen extends React.Component {
       return (
         <View style={styles.container}>
           <View style={styles.rowCenter}>
-            <Text style={styles.regularText}>{this.state.type} </Text>
-            <Text style={styles.regularText}>{data.romaji}</Text>
+            <Text 
+              style={[
+                styles.regularText,
+                { fontFamily: 'Apple SD Gothic Neo' }
+              ]}
+            >{this.state.type} </Text>
+            <Text 
+              style={[
+                styles.regularText,
+                { fontFamily: 'Apple SD Gothic Neo' }
+              ]}
+            >{data.romaji}</Text>
           </View>
           <View style={styles.rowAround}>
             <Icon.Ionicons
@@ -278,6 +306,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   largeBtn: {
+    display: 'flex',
+    marginHorizontal: 20,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
@@ -286,9 +316,11 @@ const styles = StyleSheet.create({
   },
   largeBtnText: {
     fontSize: 34,
-    fontWeight: 'bold',
+    fontFamily: 'Merriweather-Black'
   },
   rowBtn: {
+    display: 'flex',
+    marginHorizontal: 20,
     height: 66,
     justifyContent: 'center',
     borderBottomWidth: StyleSheet.hairlineWidth,
@@ -296,6 +328,7 @@ const styles = StyleSheet.create({
   rowBtnText: {
     fontSize: 30,
     marginLeft: 24,
+    fontFamily: 'Merriweather-Regular'
   },
   icon: {
     color: Colors.altColor,
@@ -303,6 +336,8 @@ const styles = StyleSheet.create({
 
   centerText: {
     textAlign: 'center',
+    color: Colors.tabIconDefault,
+    fontFamily: 'Merriweather-Regular'
   },
   row: {
     flexDirection: 'row',
@@ -323,11 +358,12 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   boldLabelText: {
-    fontWeight: 'bold',
     fontSize: 17,
+    fontFamily: 'Merriweather-Black'
   },
   labelText: {
     fontSize: 17,
+    fontFamily: 'Merriweather-Regular'
   },
   character: {
     fontSize: 180,

@@ -8,10 +8,19 @@ import {
   Image,
   Linking,
   StyleSheet, 
-  Dimensions,
-  AsyncStorage } from 'react-native';
+  Dimensions ,
+  Switch
+} from 'react-native';
 import Colors from '../constants/Colors';
 import LogoIcon from '../constants/LogoIcon';
+import {
+  Key, 
+} from 'react-native-dotenv';
+import { 
+  ProviderTypes, 
+  TranslatorFactory,
+  TranslatorConfiguration
+} from 'react-native-power-translator';
 
 export default class ResourcesScreen extends React.Component {
   static navigationOptions = {
@@ -27,84 +36,37 @@ export default class ResourcesScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      kanjiArray: null,
-      phrasesArray: null,
+      translator: null,
       translation: null,
+      isEng: true,
       searchInput: 'おはようございます',
     }
   }
 
-  // get data from AsyncStorage 
-  componentDidMount = async () => {
-    await this.getData();
-  }
+  translate = () => {
+    // select English or Japanese based on lang toggle
+    const lang = 
+      this.state.isEng
+      ? 'en'
+      : 'ja'
 
-  getData = async () => {
-    // create temp variable to store data into
-    let temp;
+    // set up config for translator using Google
+    TranslatorConfiguration.setConfig(ProviderTypes.Google, Key, lang);
 
-    // try getting the kanji array from async storage
-    try {
-      temp = await AsyncStorage.getItem('kanji');
-      // if available, set to state
-      if (temp !== null) {
-        this.setState({kanjiArray: JSON.parse(temp)});
-      }
-    } catch (err) {
-      console.log("Error getting kanji array", err);
-    }
+    // set translate variable to state
+    const translator = TranslatorFactory.createTranslator() 
+    
+    // use Google Translate to translate seach query
+    translator.translate(this.state.searchInput)
+      .then(translated => {
 
-    // try getting the phrases array
-    try {
-      temp = await AsyncStorage.getItem('phrases');
-      // if available, set to state
-      if (temp !== null) {
-        this.setState({phrasesArray: JSON.parse(temp)});
-      }
-    } catch (err) {
-      console.log("Error getting phrases array", err);
-    }
-  }
+        this.setState({ translation: translated })
+        this.setState({ isTranslated: true })
+      })
+      .catch( err => {
+        console.log( err )
+      })
 
-  translate = async () => {
-    let isTranslated = false;
-    // try translating it as a kanji
-    isTranslated = await this.checkKanjiMatch(this.state.searchInput, isTranslated);
-    // if no match, try phrases
-    if (!isTranslated)
-      isTranslated = await this.checkPhrasesMatch(this.state.searchInput, isTranslated);
-      if (isTranslated)
-        await this.setState({ isTranslated: true })
-    else 
-      await this.setState({ isTranslated: true })
-  }
-
-  // check if there is a kanji match
-  checkKanjiMatch = async (value, translated) => {
-    let match = this.state.kanjiArray.filter(o => o.kanji === value);
-    // if there is, set the state with the meaning
-    if (match.length > 0) {
-
-      await this.setState({ translation: match[0].meaning });
-
-      // return true to not evaluate phrases
-      translated = true;
-      return translated;
-    }
-  }
-
-  // check for phrases match
-  checkPhrasesMatch = async (value, translated) => {
-    let match = this.state.phrasesArray.filter(o => o.hiragana === value);
-    // if found, set state with meaning
-    if (match.length > 0) {
-
-      await this.setState({ translation: match[0].meaning });
-
-      // return true
-      translated = true;
-      return translated;
-    }
   }
 
   // watch for user changes on textarea input and update state value
@@ -116,7 +78,26 @@ export default class ResourcesScreen extends React.Component {
     return (
       <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
         <View>
-          <Text>Enter what you want to translate from Japanese to English.</Text>
+          <Text
+            style={{
+              fontFamily: 'Merriweather-Regular',
+              textAlign: 'center'
+            }}
+          >Enter what you want to translate to: </Text>
+          <View 
+            style={[
+              styles.row, 
+              styles.contentContainer,
+              { justifyContent: 'space-around' }
+            ]}>
+            <Text style={{ fontWeight: 'bold' }}>Japanese</Text>
+            <Switch 
+              onValueChange={ ( newValue ) => this.setState({ isEng: newValue })}
+              value={ this.state.isEng }
+              style={{ backgroundColor: Colors.tintColor, borderRadius: 17 }}
+            />
+            <Text style={{ fontWeight: 'bold' }}>English</Text>
+          </View>
           <View>
             <TextInput 
               keyboardType = 'default'
@@ -131,12 +112,42 @@ export default class ResourcesScreen extends React.Component {
           style={styles.translateBtn}>
           <Text style={styles.translateBtnText}>Translate</Text>
         </TouchableOpacity>
-        <Text>{ 
+        {
           !this.state.isTranslated 
-          ? ''
+          ? undefined
           : this.state.isTranslated && this.state.translation
-            ? 'Translation: ' + this.state.translation
-            : 'No Matches Found'}</Text>
+            ?<View 
+              style={{ 
+                display: 'flex', 
+                flexDirection: 'row',
+                paddingTop: 20,
+                paddingBottom: 60
+            }}>
+              <Text 
+                style={{
+                  fontWeight: 'bold',
+                  // fontFamily: 'Apple SD Gothic Neo'
+                }}
+              >
+                Translation: 
+              </Text>
+              <Text
+                style={{
+                  // fontFamily: 'Apple SD Gothic Neo'
+                }}
+              >{this.state.translation}
+              </Text>
+            </View>
+            : <Text
+                style={{
+                  paddingTop: 20,
+                  paddingBottom: 60,
+                  fontWeight: 'bold',
+                  // fontFamily: 'Apple SD Gothic Neo'
+                }}
+              >No Matches Found
+              </Text>
+        }
         <View style={styles.borderBottom} />
         <TouchableOpacity 
           style={[styles.borderBottom, styles.centerColumn]}
@@ -165,7 +176,12 @@ export default class ResourcesScreen extends React.Component {
           <TouchableOpacity 
             onPress={() => Linking.openURL('https://www.fluentin3months.com/easy-japanese/')}
           >
-            <Text style={styles.linkText}>Where to Start?</Text>
+            <Text 
+              style={[
+                styles.linkText,
+                { marginBottom: 20 }
+              ]}
+            >Where to Start?</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -254,19 +270,24 @@ const styles = StyleSheet.create({
   translateBtnText: {
     fontSize: 20,
     color: '#fff',
-    padding: 4,
+    paddingVertical: 2,
+    paddingHorizontal: 20,
+    fontWeight: 'bold',
+    fontFamily: 'Apple SD Gothic Neo'
   },
   kanaLabel: {
     fontSize: 34,
     paddingVertical: 30,
+    fontFamily: 'Merriweather-Regular'
   },
   boldText: {
-    fontWeight: 'bold',
     paddingTop: 20,
     paddingBottom: 5,
+    fontFamily: 'Merriweather-Black'
   },
   linkText: {
     color: Colors.blue,
     paddingVertical: 5,
+    fontFamily: 'Merriweather-Regular'
   },
 });
