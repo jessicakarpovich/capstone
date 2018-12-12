@@ -11,6 +11,7 @@ import LogoIcon from '../constants/LogoIcon'
 import HelpIcon from '../constants/HelpIcon'
 import {
   iosID, 
+  androidID
 } from 'react-native-dotenv';
 
 export default class SettingsScreen extends React.Component {
@@ -65,7 +66,7 @@ export default class SettingsScreen extends React.Component {
       //androidClientId: YOUR_CLIENT_ID_HERE,
       const result = await Expo.Google.logInAsync({
         iosClientId: iosID,
-        androidClientId: androidClientId,
+        androidClientId: androidID,
         scopes: ['profile', 'email'],
       });
       if (result.type === 'success') {
