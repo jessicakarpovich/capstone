@@ -9,7 +9,8 @@ import {
   Linking,
   StyleSheet, 
   Dimensions ,
-  Switch
+  Switch,
+  Platform
 } from 'react-native';
 import Colors from '../constants/Colors';
 import LogoIcon from '../constants/LogoIcon';
@@ -132,24 +133,17 @@ export default class ResourcesScreen extends React.Component {
               <Text 
                 style={{
                   fontWeight: 'bold',
-                  // fontFamily: 'Apple SD Gothic Neo'
                 }}
               >
                 Translation: 
               </Text>
-              <Text
-                style={{
-                  // fontFamily: 'Apple SD Gothic Neo'
-                }}
-              >{this.state.translation}
-              </Text>
+              <Text>{this.state.translation}</Text>
             </View>
             : <Text
                 style={{
                   paddingTop: 20,
                   paddingBottom: 60,
                   fontWeight: 'bold',
-                  // fontFamily: 'Apple SD Gothic Neo'
                 }}
               >No Matches Found
               </Text>
@@ -279,7 +273,7 @@ const styles = StyleSheet.create({
     paddingVertical: 2,
     paddingHorizontal: 20,
     fontWeight: 'bold',
-    fontFamily: 'Apple SD Gothic Neo'
+    fontFamily: Platform.OS === 'ios' ? 'Apple SD Gothic Neo' : ''
   },
   kanaLabel: {
     fontSize: 34,

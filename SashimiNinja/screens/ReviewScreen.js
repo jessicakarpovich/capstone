@@ -5,7 +5,8 @@ import {
   Text, 
   TouchableOpacity, 
   StyleSheet, 
-  AsyncStorage 
+  AsyncStorage,
+  Platform
 } from 'react-native';
 import Colors from '../constants/Colors';
 import KanaLabels from '../constants/KanaLabels';
@@ -219,13 +220,13 @@ export class ReviewDetailScreen extends React.Component {
             <Text 
               style={[
                 styles.regularText,
-                { fontFamily: 'Apple SD Gothic Neo' }
+                { fontFamily: Platform.OS === 'ios' ? 'Apple SD Gothic Neo' : ''}
               ]}
             >{this.state.type} </Text>
             <Text 
               style={[
                 styles.regularText,
-                { fontFamily: 'Apple SD Gothic Neo' }
+                { fontFamily: Platform.OS === 'ios' ? 'Apple SD Gothic Neo' : '' }
               ]}
             >{data.romaji}</Text>
           </View>

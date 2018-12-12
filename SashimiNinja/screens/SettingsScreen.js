@@ -65,6 +65,7 @@ export default class SettingsScreen extends React.Component {
       //androidClientId: YOUR_CLIENT_ID_HERE,
       const result = await Expo.Google.logInAsync({
         iosClientId: iosID,
+        androidClientId: androidClientId,
         scopes: ['profile', 'email'],
       });
       if (result.type === 'success') {

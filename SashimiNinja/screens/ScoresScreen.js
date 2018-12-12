@@ -5,7 +5,8 @@ import {
   FlatList,
   TouchableOpacity,
   AsyncStorage,
-  StyleSheet
+  StyleSheet,
+  Platform
 } from 'react-native';
 import Colors from '../constants/Colors';
 import LogoIcon from '../constants/LogoIcon';
@@ -163,7 +164,7 @@ export default class ScoresScreen extends React.Component {
           {/* <Text>{item.date}</Text> */}
         </View>
         <Text style={{
-          fontFamily: 'Apple SD Gothic Neo',
+          fontFamily: Platform.OS === 'ios' ? 'Apple SD Gothic Neo' : '',
           color: Colors.tabIconDefault
         }}>{percent}%</Text>
       </View>

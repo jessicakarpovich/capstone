@@ -7,7 +7,9 @@ import {
   TouchableOpacity, 
   ScrollView, 
   AsyncStorage, 
-  Dimensions } from 'react-native';
+  Dimensions,
+  Platform
+} from 'react-native';
 import Colors from '../constants/Colors';
 import LogoIcon from '../constants/LogoIcon';
 import HelpIcon from '../constants/HelpIcon';
@@ -536,7 +538,7 @@ export class TestDetailScreen extends React.Component {
           <Text 
             style={{
               fontWeight: '600',
-              fontFamily: 'Apple SD Gothic Neo',
+              fontFamily: Platform.OS === 'ios' ? 'Apple SD Gothic Neo' : '',
               fontSize: 20
             }}
           >Question {currentQuest+1} / {totalQuest}</Text>
@@ -849,14 +851,14 @@ const styles = StyleSheet.create({
     color: Colors.tabIconDefault,
     padding: 4,
     fontWeight: 'bold',
-    fontFamily: 'Apple SD Gothic Neo'
+    fontFamily: Platform.OS === 'ios' ? 'Apple SD Gothic Neo' : ''
   },
   btnTextActive: {
     fontSize: 20,
     color: '#000',
     padding: 4,
     fontWeight: 'bold',
-    fontFamily: 'Apple SD Gothic Neo'
+    fontFamily: Platform.OS === 'ios' ? 'Apple SD Gothic Neo' : ''
   },
   textInput: {
     borderWidth: 1,
@@ -888,7 +890,7 @@ const styles = StyleSheet.create({
   choicesText: {
     fontSize: 20,
     textAlign: 'center',
-    fontFamily: 'Apple SD Gothic Neo'
+    fontFamily: Platform.OS === 'ios' ? 'Apple SD Gothic Neo' : ''
   },
   closeBtn: {
     backgroundColor: Colors.blue,
@@ -902,7 +904,7 @@ const styles = StyleSheet.create({
     paddingVertical: 2,
     paddingHorizontal: 50,
     fontWeight: 'bold',
-    fontFamily: 'Apple SD Gothic Neo'
+    fontFamily: Platform.OS === 'ios' ? 'Apple SD Gothic Neo' : ''
   },
   congratsMes: {
     fontSize: 40,
