@@ -753,7 +753,23 @@ export class TestCompleteScreen extends React.Component {
 
     if ( user ) {
       const userRef = db.collection('users').doc(user.uid)
+      userRef.get().then((doc) => {
+        // check for score data, if exists, continue
+        if (doc.exists) {
+          const dbScores = doc.data().array
+          const dbLength = dbScores.length
 
+          dbScores[dbLength-1].date = this._keyExtractor( dbScores[dbLength-1] )
+          scores[dbLength-1].date = this._keyExtractor( scores[dbLength-1] )
+
+          // if db array is longer or has a newer date, load db data
+          if ( dbScores[dbLength-1].date > scores[dbLength-1].date ) {
+            scores = dbScores
+          }
+        }// catch errors
+      }).catch((error) => {
+          console.log("Error getting document:", error);
+      })
       // set new scores
       userRef.set({
         array: scores
@@ -764,6 +780,14 @@ export class TestCompleteScreen extends React.Component {
       .catch((err) => {
         console.log(err)
       })
+    }
+  }
+
+  _keyExtractor = ( item, index ) => {
+    if (typeof(item.date) !== 'object') {
+      return item.date
+    } else {
+      return item.date.toDate().toISOString()
     }
   }
 

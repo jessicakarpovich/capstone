@@ -102,13 +102,13 @@ export default class ScoresScreen extends React.Component {
           const dbScores = doc.data().array
           const dbLength = dbScores.length
 
+          dbScores[dbLength-1].date = this._keyExtractor( dbScores[dbLength-1] )
+          scores[dbLength-1].date = this._keyExtractor( scores[dbLength-1] )
+
           // if db array is longer or has a newer date, load db data
-          if (dbLength > scores.length
-            || 
-            ( dbLength === scores.length
-              && dbScores[dbLength-1].date > scores[dbLength-1].date) ) {
-                this.setState({ scores: dbScores })
-              }
+          if ( dbScores[dbLength-1].date > scores[dbLength-1].date ) {
+            this.setState({ scores: dbScores })
+          }
 
         } else {
           // doc.data() will be undefined in this case
@@ -123,9 +123,11 @@ export default class ScoresScreen extends React.Component {
   }
 
   _keyExtractor = ( item, index ) => {
-    if (typeof(item.date) !== 'object') {
+    if ( typeof(item.date) !== 'object') {
       return item.date
     } else {
+      console.log(typeof(item.date))
+      console.log('rtryry')
       return item.date.toDate().toISOString()
     }
   }
@@ -160,7 +162,6 @@ export default class ScoresScreen extends React.Component {
           <Text style={{
             fontFamily: 'Merriweather-Regular'
           }}>{time[0]}</Text>
-          {/* <Text>{item.date}</Text> */}
         </View>
         <Text style={{
           fontFamily: 'Apple SD Gothic Neo',
