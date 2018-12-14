@@ -47,4 +47,6 @@
 
 ## Public Release
 
+[Video Demo Link](https://youtu.be/OqHDYWvdkaw)
+
 *Note:* Link to tagged release will be added upon PR approval.
