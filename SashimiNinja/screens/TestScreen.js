@@ -107,7 +107,7 @@ export default class TestScreen extends React.Component {
         this.setState({hArray: JSON.parse(temp)});
       }
     } catch (err) {
-      console.log("Error getting kanji array", err);
+      // console.log("Error getting hiragana array", err);
     }
 
     // try getting the katakana array from async storage
@@ -118,7 +118,7 @@ export default class TestScreen extends React.Component {
         this.setState({kArray: JSON.parse(temp)});
       }
     } catch (err) {
-      console.log("Error getting kanji array", err);
+      // console.log("Error getting katakana array", err);
     }
 
     // try getting the kanji array from async storage
@@ -129,7 +129,7 @@ export default class TestScreen extends React.Component {
         this.setState({kanjiArray: JSON.parse(temp)});
       }
     } catch (err) {
-      console.log("Error getting kanji array", err);
+      // console.log("Error getting kanji array", err);
     }
 
     // grab data loaded from async storage
@@ -769,17 +769,17 @@ export class TestCompleteScreen extends React.Component {
           }
         }// catch errors
       }).catch((error) => {
-          console.log("Error getting document:", error);
+          // console.log("Error getting document:", error);
       })
       // set new scores
       userRef.set({
         array: scores
       })
-      .then(() => {
-        console.log('success')
-      })
+      // .then(() => {
+      //   console.log('success')
+      // })
       .catch((err) => {
-        console.log(err)
+        // console.log(err)
       })
     }
   }

@@ -91,10 +91,10 @@ export default class App extends React.Component {
           AsyncStorage.setItem('hiragana', JSON.stringify(hArray));
       } else {
           // doc.data() will be undefined in this case
-          console.log("No such document!");
+          // console.log("No such document!");
       }// catch errors
     }).catch(function(error) {
-        console.log("Error getting document:", error);
+        // console.log("Error getting document:", error);
     });
   }
 
@@ -112,10 +112,10 @@ export default class App extends React.Component {
           AsyncStorage.setItem('katakana', JSON.stringify(kArray));
       } else {
           // doc.data() will be undefined in this case
-          console.log("No such document!");
+          // console.log("No such document!");
       }// catch errors
     }).catch(function(error) {
-        console.log("Error getting document:", error);
+        // console.log("Error getting document:", error);
     });
   }
 
@@ -129,10 +129,10 @@ export default class App extends React.Component {
           kanjiArray = doc.data().array;
           AsyncStorage.setItem('kanji', JSON.stringify(kanjiArray));
       } else {
-          console.log("No such document!");
+          // console.log("No such document!");
       }
     }).catch(function(error) {
-        console.log("Error getting document:", error);
+        // console.log("Error getting document:", error);
     });
   }
 
@@ -146,10 +146,10 @@ export default class App extends React.Component {
         phrasesArray = doc.data().array;
         AsyncStorage.setItem('phrases', JSON.stringify(phrasesArray));
       } else {
-          console.log("No such document!");
+          // console.log("No such document!");
       }
     }).catch(function(error) {
-        console.log("Error getting document:", error);
+        // console.log("Error getting document:", error);
     });
   }
 
@@ -189,7 +189,7 @@ export default class App extends React.Component {
   _handleLoadingError = error => {
     // In this case, you might want to report the error to your error
     // reporting service, for example Sentry
-    console.warn(error);
+    // console.warn(error);
   };
 
   _handleFinishLoading = () => {

@@ -47,4 +47,4 @@
 
 ## Public Release
 
-*Note:* Will be added later.
+*Note:* Link to tagged release will be added upon PR approval.
