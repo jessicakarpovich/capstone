@@ -37,11 +37,13 @@
 
 [Video Demo Link](https://youtu.be/3TtWPVdfJnE)
 
-*Note:* Will be added later.
+[Link to commit tagged with v1.1.0 Alpha Release](https://github.com/jessicakarpovich/capstone/commit/31f82c3b50442172fb5f9a582c90508f743aa6e8)
 
 ## Beta Release
 
-*Note:* Will be added later.
+[Video Demo Link](https://youtu.be/hFlx0qInkDA)
+
+[Link to commit tagged with v1.2.0 Beta Release](https://github.com/jessicakarpovich/capstone/commit/9b95c554b8c090cc502be334441746688709cd9e)
 
 ## Public Release
 
