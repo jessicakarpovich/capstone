@@ -4,7 +4,6 @@ import {
   StyleSheet, 
   Text, 
   TextInput, 
-  Button, 
   TouchableOpacity, 
   ScrollView, 
   AsyncStorage, 
@@ -12,7 +11,11 @@ import {
 import Colors from '../constants/Colors';
 import LogoIcon from '../constants/LogoIcon';
 import HelpIcon from '../constants/HelpIcon';
-import { StackActions, NavigationActions } from 'react-navigation';
+import { 
+  StackActions, 
+  NavigationActions 
+} from 'react-navigation';
+import * as firebase from 'firebase';
 
 export default class TestScreen extends React.Component {
   // num ofquest is # of questions user requested, default 15
@@ -34,7 +37,11 @@ export default class TestScreen extends React.Component {
   static navigationOptions = ({ navigation}) => ({
     title: 'Test',
     headerLeft: (
-      <LogoIcon />
+      <TouchableOpacity
+        onPress={() => navigation.navigate( 'Scores' )}
+      >
+        <LogoIcon />
+      </TouchableOpacity>
     ),
     headerRight: (
       <TouchableOpacity
@@ -649,13 +656,115 @@ export class TestCompleteScreen extends React.Component {
       this.state = {
         correct: null,
         total: null,
+        user: false,
+        db: false,
       };
   }
 
-  componentDidMount = () => {
+  componentDidMount() {
+    const {
+      correct,
+      total
+    } = this.props.navigation.state.params
+    // load user if logged in
+    this.loadUser( correct, total )
+    // save the score
+    // this.storeScore( correct, total )
+
     // get # correct and total, calc percent and round
-    this.setState({ correct: this.props.navigation.state.params.correct });
-    this.setState({ total: this.props.navigation.state.params.total });
+    this.setState({ correct: correct });
+    this.setState({ total: total });
+  }
+
+  loadUser = ( correct, total ) => {
+
+    AsyncStorage.getItem('user')
+    // load user, parse data, store if valid
+    .then((user) => {
+      user = JSON.parse(user)
+
+      if ( user ) {
+        // save the score
+        this.setState({ user: user }, this.storeScore( correct, total, user ))
+
+      } else {
+        // save the score
+        this.storeScore( correct, total )
+      }
+    })
+  }
+
+  storeScore = ( correct, total, user = false ) => {
+
+    AsyncStorage.getItem('scores')
+      .then((scores) => {
+        scores = JSON.parse(scores)
+
+        // check for valid data
+        if (!scores) {
+          // set date and correct out of total
+          const date = new Date()
+          const newScores = [ 
+            {
+              score: `${correct}/${total}`, 
+              date: date
+            }
+          ] 
+          // store the new array
+          AsyncStorage.setItem('scores', JSON.stringify(newScores))
+          this.storeHighScores( user, newScores )
+
+          // if less than 10 scores saves, add this one to the end
+        } else if ( scores.length < 10) {
+          const date = new Date()
+          const newScores = scores
+
+          newScores.push({
+            score: `${correct}/${total}`, 
+            date: date
+          })
+          AsyncStorage.setItem('scores', JSON.stringify(newScores))
+          this.storeHighScores( user, newScores )
+          // if 10 are saved, remove the first one and add this one
+        } else {
+          // remove the first entry, it's the oldest
+          scores.shift()
+          const date = new Date()
+          const newScores = scores
+
+          newScores.push({
+            score: `${correct}/${total}`, 
+            date: date
+          })
+          AsyncStorage.setItem('scores', JSON.stringify(newScores))
+          this.storeHighScores( user, newScores )
+        }
+      })
+  }
+
+  // plug in with scores
+  storeHighScores = (user, scores) => {
+    const db = firebase.firestore();
+
+    // Disable deprecated features
+    db.settings({
+      timestampsInSnapshots: true
+    });
+
+    if ( user ) {
+      const userRef = db.collection('users').doc(user.uid)
+
+      // set new scores
+      userRef.set({
+        array: scores
+      })
+      .then(() => {
+        console.log('success')
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+    }
   }
 
   navigate = () => {
