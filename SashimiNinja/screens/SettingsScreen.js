@@ -76,13 +76,13 @@ export default class SettingsScreen extends React.Component {
         // Sign in with credential from Google user
         firebase.auth().signInAndRetrieveDataWithCredential(credential).catch((error) => {
           // show errors here.
-          console.log(error);
+          // console.log(error);
         });
       } else {
-        console.log("cancelled sign in");
+        // console.log("cancelled sign in");
       }
     } catch(e) {
-      console.log(e);
+      // console.log(e);
     }
   }
 
@@ -90,7 +90,6 @@ export default class SettingsScreen extends React.Component {
   signOut() {
     firebase.auth().signOut().then(() => {
       // Sign-out successful.
-      console.log("Logged OUT");
       this.setState({ signedIn: false })
 
       AsyncStorage.setItem('user', JSON.stringify([]))
@@ -99,8 +98,7 @@ export default class SettingsScreen extends React.Component {
 
     }).catch(function(error) {
       // An error happened.
-      console.log(error)
-      console.log("Error in signing out");
+      // console.log(error)
     });
   }
 

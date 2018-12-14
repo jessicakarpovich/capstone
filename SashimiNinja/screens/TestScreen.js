@@ -107,7 +107,7 @@ export default class TestScreen extends React.Component {
         this.setState({hArray: JSON.parse(temp)});
       }
     } catch (err) {
-      console.log("Error getting kanji array", err);
+      // console.log("Error getting hiragana array", err);
     }
 
     // try getting the katakana array from async storage
@@ -118,7 +118,7 @@ export default class TestScreen extends React.Component {
         this.setState({kArray: JSON.parse(temp)});
       }
     } catch (err) {
-      console.log("Error getting kanji array", err);
+      // console.log("Error getting katakana array", err);
     }
 
     // try getting the kanji array from async storage
@@ -129,7 +129,7 @@ export default class TestScreen extends React.Component {
         this.setState({kanjiArray: JSON.parse(temp)});
       }
     } catch (err) {
-      console.log("Error getting kanji array", err);
+      // console.log("Error getting kanji array", err);
     }
 
     // grab data loaded from async storage
@@ -753,17 +753,42 @@ export class TestCompleteScreen extends React.Component {
 
     if ( user ) {
       const userRef = db.collection('users').doc(user.uid)
+      userRef.get().then((doc) => {
+        // check for score data, if exists, continue
+        if (doc.exists) {
+          const dbScores = doc.data().array
+          const dbLength = dbScores.length
+          const scoresLength = scores.length
 
+          dbScores[dbLength-1].date = this._keyExtractor( dbScores[dbLength-1] )
+          scores[scoresLength-1].date = this._keyExtractor( scores[scoresLength-1] )
+
+          // if db array has a newer date, load db data
+          if ( dbScores[dbLength-1].date > scores[scoresLength-1].date ) {
+            scores = dbScores
+          }
+        }// catch errors
+      }).catch((error) => {
+          // console.log("Error getting document:", error);
+      })
       // set new scores
       userRef.set({
         array: scores
       })
-      .then(() => {
-        console.log('success')
-      })
+      // .then(() => {
+      //   console.log('success')
+      // })
       .catch((err) => {
-        console.log(err)
+        // console.log(err)
       })
+    }
+  }
+
+  _keyExtractor = ( item, index ) => {
+    if (typeof(item.date) !== 'object') {
+      return item.date
+    } else {
+      return item.date.toDate().toISOString()
     }
   }
 
