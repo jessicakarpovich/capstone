@@ -758,12 +758,13 @@ export class TestCompleteScreen extends React.Component {
         if (doc.exists) {
           const dbScores = doc.data().array
           const dbLength = dbScores.length
+          const scoresLength = scores.length
 
           dbScores[dbLength-1].date = this._keyExtractor( dbScores[dbLength-1] )
-          scores[dbLength-1].date = this._keyExtractor( scores[dbLength-1] )
+          scores[scoresLength-1].date = this._keyExtractor( scores[scoresLength-1] )
 
-          // if db array is longer or has a newer date, load db data
-          if ( dbScores[dbLength-1].date > scores[dbLength-1].date ) {
+          // if db array has a newer date, load db data
+          if ( dbScores[dbLength-1].date > scores[scoresLength-1].date ) {
             scores = dbScores
           }
         }// catch errors
