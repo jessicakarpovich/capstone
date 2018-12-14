@@ -98,17 +98,19 @@ export default class ScoresScreen extends React.Component {
       userRef.get().then((doc) => {
         
         // check for score data, if exists, continue
-        if (doc.exists) {
+        if (doc.exists && doc.data().array.length > 0) {
           const dbScores = doc.data().array
           const dbLength = dbScores.length
+          const scoresLength = scores.length
 
-          // if db array is longer or has a newer date, load db data
-          if (dbLength > scores.length
-            || 
-            ( dbLength === scores.length
-              && dbScores[dbLength-1].date > scores[dbLength-1].date) ) {
-                this.setState({ scores: dbScores })
-              }
+          dbScores[dbLength-1].date = this._keyExtractor( dbScores[dbLength-1] )
+          scores[scoresLength-1].date = this._keyExtractor( scores[scoresLength-1] )
+
+          // // if db array has a newer date, load db data
+          if ( dbScores[dbLength-1].date > scores[scoresLength-1].date ) {
+            console.log('hjvv')
+            this.setState({ scores: dbScores })
+          }
 
         } else {
           // doc.data() will be undefined in this case
@@ -123,7 +125,7 @@ export default class ScoresScreen extends React.Component {
   }
 
   _keyExtractor = ( item, index ) => {
-    if (typeof(item.date) !== 'object') {
+    if ( typeof(item.date) !== 'object') {
       return item.date
     } else {
       return item.date.toDate().toISOString()
@@ -137,7 +139,7 @@ export default class ScoresScreen extends React.Component {
     const denom = parseFloat(fraction[1])
     // round percent
     const percent = ( ( num / denom) * 100 ).toFixed( 2 )
-
+    
     // if timestamp, convert to ISOString to work with the rest of the logic
     // for some reason, the last value saved to Firestore is stored as Timestamp obj
     if (typeof(item.date) == 'object') {
@@ -160,7 +162,6 @@ export default class ScoresScreen extends React.Component {
           <Text style={{
             fontFamily: 'Merriweather-Regular'
           }}>{time[0]}</Text>
-          {/* <Text>{item.date}</Text> */}
         </View>
         <Text style={{
           fontFamily: 'Apple SD Gothic Neo',
