@@ -70,7 +70,7 @@ export default class ResourcesScreen extends React.Component {
         this.setState({ isTranslated: true })
       })
       .catch( err => {
-        console.log( err )
+        // console.log( err )
       })
 
   }

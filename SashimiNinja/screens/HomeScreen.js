@@ -70,7 +70,7 @@ export default class HomeScreen extends React.Component {
         this.setState({kanjiArray: JSON.parse(temp)});
       }
     } catch (err) {
-      console.log("Error getting kanji array", err);
+      // console.log("Error getting kanji array", err);
     }
 
     // try getting the phrases array
@@ -81,7 +81,7 @@ export default class HomeScreen extends React.Component {
         this.setState({phrasesArray: JSON.parse(temp)});
       }
     } catch (err) {
-      console.log("Error getting phrases array", err);
+      // console.log("Error getting phrases array", err);
     }
 
     // try getting the date (day of the week as int 0-6)
@@ -92,7 +92,7 @@ export default class HomeScreen extends React.Component {
         this.setState({date: JSON.parse(temp)});
       }
     } catch (err) {
-      console.lsog("Error getting date", err);
+      // console.lsog("Error getting date", err);
     }
 
     // try getting dayIndex
@@ -103,7 +103,7 @@ export default class HomeScreen extends React.Component {
         this.setState({dayIndex: JSON.parse(temp)});
       }
     } catch (err) {
-      console.log("Error getting day index", err);
+      // console.log("Error getting day index", err);
     }
   }
 

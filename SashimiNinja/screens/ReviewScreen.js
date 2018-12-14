@@ -170,7 +170,7 @@ export class ReviewDetailScreen extends React.Component {
             let temp = JSON.parse(characterArray);
             this.setState({characterArray: temp});
           } catch(e) {
-            console.log("Error in retrieving character array. " + e.message);
+            // console.log("Error in retrieving character array. " + e.message);
           }
         }
       })
