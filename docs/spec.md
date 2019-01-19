@@ -19,10 +19,10 @@
 
 [Link to Features](https://github.com/jessicakarpovich/capstone/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Afeature)
 
-* log in/oAuth/logout - if time allows
+* log in/oAuth/logout
 * Firebase connection
 * kanji, phrase of the day
-* 10 most recent test scores - if time allows
+* 10 most recent test scores
 * review kana by row, kanji be level
 * test - randomly generated questions from selected content
 * translation using Google API
@@ -181,7 +181,7 @@ Recent Scores
 ### Browser Support
 
 #### OS Support
-This app will support portrait mode in iOS (and Android if time allows). To make Android support easier, I will avoid using any platform specific React Native components. Ideally, I want the app to be open to iOS and Andriod users.
+This app will support portrait mode in iOS (currently Android is not supported).
 
 #### Portrait/Landscape Mode Support
 Because of the nature of the app, content is best listed top to bottom. It will look and be most usable in portrait mode, so I will not be adding support for landscape mode.
@@ -191,7 +191,6 @@ Because of the nature of the app, content is best listed top to bottom. It will 
 As my app focuses on displaying data vertically, key resolution is smallest acceptable width. For this, I'll be looking at phones, not tablets.
 
 - iPhone 7 - 750-pixels wide at 326 ppi
-- Galaxy S8 - 1440-pixels wide at 570 ppi
 
 ## Infrastructure
 
